@@ -34,11 +34,11 @@
 - http://localhost:8080/[任意のhtmlファイル名]
 - 拡張子（.html）は不要です！
 ### VsCode
-- 下記プラグインをインストール
+- VSCodeで下記プラグインをインストール
   - Java Extension Pack
   - Spring Boot Extension Pack
   - Lombok Annotations Support for VS Code
-- このリポジトリをcloneする
+- リポジトリをcloneする
 - Spring Boot Dashboard > APPS > 起動ボタンをクリック
 - 起動が完了したら、以下のリンクにアクセス
 - http://localhost:8080/[任意のhtmlファイル名]
