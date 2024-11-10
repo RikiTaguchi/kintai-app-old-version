@@ -38,7 +38,7 @@
   - Java Extension Pack
   - Spring Boot Extension Pack
   - Lombok Annotations Support for VS Code
-- リポジトリをcloneする
+- cloneしたフォルダ（リポジトリ）に移動する
 - Spring Boot Dashboard > APPS > 起動ボタンをクリック
 - 起動が完了したら、以下のリンクにアクセス
 - http://localhost:8080/[任意のhtmlファイル名]
