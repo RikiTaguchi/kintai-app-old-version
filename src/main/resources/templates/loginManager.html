@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<title>勤怠管理システム</title>
+	</head>
+	<body>
+		<div>
+			<h1>管理者ログイン</h1>
+			<form th:action = "@{/loginManagerCheck}" method = "post" th:object = "${managerLoginForm}">
+				<div>
+					<label for = "loginId">ログインID</label>
+					<input id = "loginId" type = "text" th:field = "*{loginId}" required>
+				</div>
+				<div>
+					<label for = "password">パスワード</label>
+					<input id = "password" type = "text" th:field = "*{password}" required>
+				</div>
+				<div>
+					<input type = "submit" value = "ログイン">
+				</div>
+			</form>
+		</div>
+		<br>
+		<div>
+			<a th:href="@{/signUpManager}">アカウントを作成</a>
+		</div>
+	</body>
+</html>

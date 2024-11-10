@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<title>勤怠管理システム</title>
+		<link th:href="@{/css/style.css}" rel="stylesheet">
+	</head>
+	<body>
+		<div>
+			<span th:text = "${manager.classArea}"></span>教室<br>
+			<span th:text = "${user.userName}"></span>
+		</div>
+		<br>
+		<div>
+			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${yearBefore}, month=${monthBefore})}">先月</a>
+			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${yearNext}, month=${monthNext})}">来月</a>
+		</div>
+		<div>
+			<a th:href = "@{/indexManager(manager=${manager.id})}">ホームへ戻る</a>
+		</div>
+		<br>
+		<div>
+			<a th:href = "@{/createForm(manager=${manager.id}, user=${user.id}, year=${year}, month=${month})}">シフト登録</a>
+		</div>
+		<br>
+		<div>
+			<table border="1" style="border-collapse: collapse">
+				<tr>
+					<th>教室名</th><td><span th:text = "${manager.classArea}"></span>教室</td>
+					<th>講師氏名</th><td class="cell-blue"><span th:text = "${user.userName}"></span></td>
+					<td colspan = "2"><span th:text = "${year+'年'+month+'月分　'+monthBefore+'月26日〜'+month+'月25日'}"></span></td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<div style = "display: flex;">
+			<table border="1" style="border-collapse: collapse">
+				<tr>
+					<th>勤務コマ数</th>
+					<th>勤務日数</th>
+					<th>事務時間(分)</th>
+					<th>日時手当</th>
+					<th>交通費</th>
+					<th>研修時間(分)</th>
+					<th>時間外(分)</th>
+					<th>超過(分)</th>
+					<th>深夜(分)</th>
+				</tr>
+				<tr>
+					<td><span th:text = "${sumSalary[0]}"></span></td>
+					<td><span th:text = "${sumSalary[2]}"></span></td>
+					<td><span th:text = "${sumSalary[5]}"></span></td>
+					<td><span th:text = "${sumSalary[9]}"></span></td>
+					<td><span th:text = "${sumSalary[11]}"></span></td>
+					<td><span th:text = "${sumSalary[7]}"></span></td>
+					<td><span th:text = "${sumSalary[3]}"></span></td>
+					<td><span th:text = "${sumSalary[12]}"></span></td>
+					<td><span th:text = "${sumSalary[14]}"></span></td>
+				</tr>
+			</table>
+			<div>
+				<p>　</p>
+			</div>
+			<table border="1" style="border-collapse: collapse">
+				<tr><th rowspan = "2">交通費</th><td>①</td><td>②</td></tr>
+				<tr><td></td><td><span th:text = "${salary.carfare}"></span></td></tr>
+			</table>
+		</div>
+		<br>
+		<div>
+			<table border="1" style="border-collapse: collapse">
+				<tr>
+					<th rowspan = "2" colspan = "2">勤務日</th>
+					<th rowspan = "2">勤務コマ</th>
+					<th rowspan = "2">コマ数</th>
+					<th rowspan = "2">ヘルプ<br>勤務教室</th>
+					<th colspan = "2">授業業務</th>
+					<th rowspan = "2">休憩</th>
+					<th colspan = "3">事務業務</th>
+					<th rowspan = "2">日時手当</th>
+					<th rowspan = "2">交通費</th>
+					<th colspan = "5">研修(実施会場)/自習教室</th>
+					<th rowspan = "2">時間外</th>
+					<th rowspan = "2">超過</th>
+					<th rowspan = "2">深夜</th>
+				</tr>
+				<tr>
+					<th>開始</th>
+					<th>終了</th>
+					<th>開始</th>
+					<th>終了</th>
+					<th>時間</th>
+					<th>内容</th>
+					<th>開始</th>
+					<th>終了</th>
+					<th>休憩</th>
+					<th>時間</th>
+				</tr>
+				<th:block th:if = "${!#lists.isEmpty(workList)}">
+				<tr th:each = "w : ${workList}">
+					<td class="cell-blue"><a th:href = "@{/setForm(manager=${manager.id}, user=${user.id}, edit=${w.id}, year=${year}, month=${month})}"><span th:text = "${w.date.substring(5,10).replace('-','月')+'日'}"></span></a></td>
+					<td th:text = "${w.dayOfWeek}"></td>
+					<td class="cell-blue">
+						<th:block th:if = "${w.classM}"><span th:text = "'M'"></span></th:block>
+						<th:block th:if = "${w.classK}"><span th:text = "'K'"></span></th:block>
+						<th:block th:if = "${w.classS}"><span th:text = "'S'"></span></th:block>
+						<th:block th:if = "${w.classA}"><span th:text = "'A'"></span></th:block>
+						<th:block th:if = "${w.classB}"><span th:text = "'B'"></span></th:block>
+						<th:block th:if = "${w.classC}"><span th:text = "'C'"></span></th:block>
+						<th:block th:if = "${w.classD}"><span th:text = "'D'"></span></th:block>
+					</td>
+					<td><th:block th:if = "${w.classCount != 0}"><span th:text = "${w.classCount}"></span></th:block></td>
+					<td th:text = "${w.helpArea}"></td>
+					<td th:text = "${w.timeStart}"></td>
+					<td th:text = "${w.timeEnd}"></td>
+					<td><th:block th:if = "${w.breakTime != 0}"><span th:text = "${w.breakTime}"></span></th:block></td>
+					<td class="cell-blue" th:text = "${w.officeTimeStart}"></td>
+					<td class="cell-blue" th:text = "${w.officeTimeEnd}"></td>
+					<td><th:block th:if = "${w.officeTime != 0}"><span th:text = "${w.officeTime}"></span></th:block></td>
+					<td><th:block th:if = "${w.supportSalary == 'true'}"><span th:text = "${salaryMap.get(w.id).supportSalary}"></span></th:block></td>
+					<td><th:block th:if = "${w.carfare != 0}"><span th:text = "${w.carfare}"></span></th:block></td>
+					<td class="cell-blue" th:text = "${w.otherWork}"></td>
+					<td class="cell-blue" th:text = "${w.otherTimeStart}"></td>
+					<td class="cell-blue" th:text = "${w.otherTimeEnd}"></td>
+					<td class="cell-blue"><th:block th:if = "${w.otherBreakTime != 0}"><span th:text = "${w.otherBreakTime}"></span></th:block></td>
+					<td><th:block th:if = "${w.otherTime != 0}"><span th:text = "${w.otherTime}"></span></th:block></td>
+					<td><th:block th:if = "${w.outOfTime != 0}"><span th:text = "${w.outOfTime}"></span></th:block></td>
+					<td><th:block th:if = "${w.overTime != 0}"><span th:text = "${w.overTime}"></span></th:block></td>
+					<td><th:block th:if = "${w.nightTime != 0}"><span th:text = "${w.nightTime}"></span></th:block></td>
+				</tr>
+				</th:block>
+			</table>
+		</div>
+		<br>
+		<div>
+			<table border="1" style="border-collapse: collapse">
+				<tr><th>コマ給</th><th>コマ数</th><th>①コマ給×コマ数</th><th>②日時手当</th><th>③事務給</th></tr>
+				<tr>
+					<td>¥<span th:text = "${salary.classSalary}"></span></td>
+					<td><span th:text = "${sumSalary[0]}"></span>コマ</td>
+					<td>¥<span th:text = "${sumSalary[1]}"></span></td>
+					<td>¥<span th:text = "${sumSalary[9]}"></span></td>
+					<td>￥<span th:text = "${sumSalary[6]}"></span></td>
+				</tr>
+				<tr><th colspan = "2">④研修費・時間外</th><th>⑤その他</th><th>所得税</th><th>交通費計</th></tr>
+				<tr>
+					<td colspan = "2">¥<span th:text = "${sumSalary[4]+sumSalary[8]+sumSalary[13]+sumSalary[15]}"></span></td>
+					<td>¥<span th:text = "${sumSalary[10]}"></span></td>
+					<td>¥<span th:text = "'0'"></span></td>
+					<td>¥<span th:text = "${sumSalary[11]}"></span></td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<div>
+			※「④研修費・時間外」内訳
+			<table border="1" style="border-collapse: collapse">
+				<tr><th>研修・自習室(円/分)</th><th>時間外勤務(円/分)</th><th>超過勤務割増(円/分)</th><th>深夜勤務割増(円/分)</th></tr>
+				<tr>
+					<td><span th:text = "${sumSalary[8]+'円/'+sumSalary[7]+'分'}"></span></td>
+					<td><span th:text = "${sumSalary[4]+'円/'+sumSalary[3]+'分'}"></span></td>
+					<td><span th:text = "${sumSalary[13]+'円/'+sumSalary[12]+'分'}"></span></td>
+					<td><span th:text = "${sumSalary[15]+'円/'+sumSalary[14]+'分'}"></span></td>
+				</tr>
+			</table>
+		</div>
+		<br>
+		<div>
+			<table border="1" style="border-collapse: collapse">
+				<tr><th>差引支給額</th></tr>
+				<tr><td>¥<span th:text = "${sumSalary[16]}"></span></td></tr>
+			</table>
+		</div>
+		<br>
+		<div>
+			※①〜⑤の合計額が¥88000を超えた場合、所得税を徴収致します。<br>
+			※「⑤その他」は、研修期間終了による昇給で生じた差額等です。<br>
+			※自習室は、「④研修費/時間外」に含まれます。<br>
+		</div>
+	</body>
+</html>

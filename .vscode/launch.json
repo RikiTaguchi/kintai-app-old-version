@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-KintaiSystemApplication<task>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.management.task.KintaiSystemApplication",
+            "projectName": "task",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
