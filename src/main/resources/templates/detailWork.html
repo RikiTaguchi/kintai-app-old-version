@@ -38,8 +38,8 @@
 					<th>ヘルプ勤務教室</th>
 					<td>
 						<div>
-							<th:block th:if = "${!work.helpArea.equals('')}"><span id = "helpArea" th:text = "${work.helpArea}"></span></th:block>
-							<th:block th:if = "${work.helpArea.equals('')}"><span id = "helpArea" th:text = "'-'"></span></th:block>
+							<th:block th:if = "${!work.helpArea.equals('')}"><span th:text = "${work.helpArea}"></span></th:block>
+							<th:block th:if = "${work.helpArea.equals('')}"><span th:text = "'-'"></span></th:block>
 						</div>
 					</td>
 				</tr>
