@@ -45,9 +45,42 @@
 - 拡張子（.html）は不要です！
   
 ## Appの概要
-- 講師: login.html
-- 社員: loginManager.html
+- 講師: http://localhost:8080/login
+- 社員: http://localhost:8080/loginManager
 - からどこの画面にも遷移できるようになっています！
-- まずは社員アカウントを作成
-- 社員アカウントでログイン > 講師登録をクリック > 講師アカウントの登録
-- ここまで済めば、login.htmlから講師ログインが可能
+- 社員アカウント作成 > 社員アカウントログイン > 講師アカウントの登録
+- ここまで済めば、http://localhost:8080/loginから講師ログインが可能
+
+## htmlファイルの詳細
+### 講師用（スマホで使う想定）
+##### ベース機能
+- login: 講師ログイン
+- index: ホーム画面
+- detail: 給与明細
+##### シフト関連
+- addForm: シフト登録
+- detailWork: シフト詳細
+- editForm: シフト修正
+##### テンプレート関連
+- infoTemplate: テンプレート一覧
+- templateForm: テンプレート登録
+- detailTemplate: テンプレート詳細
+- editTemplateForm: テンプレート修正
+##### その他
+- user: 基本情報詳細
+- userForm: 基本情報修正
+- detailSalary: 昇給情報
+### 社員用（PCで使う想定）
+##### ベース機能
+- loginManager: 社員ログイン
+- signUpManager: 社員アカウント登録
+- signUp: 講師アカウント登録
+- indexManager: ホーム画面
+##### 講師関連
+- createForm: シフト登録
+- detailUser: 給与詳細、シフト詳細
+- setForm: シフト修正
+- infoUser: 基本情報
+- infoSalary: 昇給情報一覧
+- updateForm: 昇給登録
+- salaryForm: 昇給修正
