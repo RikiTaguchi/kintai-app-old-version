@@ -7,7 +7,7 @@
 	<body>
 		<div>
 			<h1>管理者ログイン</h1>
-			<form th:action = "@{/loginManagerCheck}" method = "post" th:object = "${managerLoginForm}">
+			<form th:action = "@{/loginManager}" method = "post" th:object = "${managerLoginForm}">
 				<div>
 					<label for = "loginId">ログインID</label>
 					<input id = "loginId" type = "text" th:field = "*{loginId}" required>

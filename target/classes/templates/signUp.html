@@ -10,7 +10,7 @@
 		</div>
 		<div>講師登録</div>
 		<div>
-			<form th:action = "@{/addUser}" method = "post">
+			<form th:action = "@{/signUp}" method = "post">
 				<table border="1" style="border-collapse: collapse">
 					<tr><th>講師名</th><td><div><input id = "userName" type = "text" th:field = "*{userCreateForm.userName}" required></div></td></tr>
 					<tr><th>雇用開始</th><td><div><input id = "dateFrom" type = "date" th:field = "*{salaryCreateForm.dateFrom}" required> 〜</div></td></tr>

@@ -11,7 +11,7 @@
 		</div>
 		<br>
 		<div>
-			<form th:action = "@{/editUser}" method = "post" th:object = "${userUpdateForm}">
+			<form th:action = "@{/userForm}" method = "post" th:object = "${userUpdateForm}">
 				<table border="1" style="border-collapse: collapse">
 					<tr><th>ログインID</th><td><div><input id = "loginId" type = "text" th:field = "*{loginId}"></div></td></tr>
 					<tr><th>パスワード</th><td><div><input id = "password" type = "text" th:field = "*{password}"></div></td></tr>

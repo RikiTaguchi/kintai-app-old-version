@@ -7,7 +7,7 @@
 	<body>
 		<div>
 			<h1>アカウント登録</h1>
-			<form th:action = "@{/addManager}" method = "post" th:object = "${managerCreateForm}">
+			<form th:action = "@{/signUpManager}" method = "post" th:object = "${managerCreateForm}">
 				<div>
 					<label for = "loginId">ログインID</label>
 					<input id = "loginId" type = "text" th:field = "*{loginId}" required>
