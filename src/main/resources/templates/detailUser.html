@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>勤怠管理システム</title>
-		<link th:href="@{/css/style.css}" rel="stylesheet">
 	</head>
 	<body>
 		<div>
@@ -27,7 +26,7 @@
 			<table border="1" style="border-collapse: collapse">
 				<tr>
 					<th>教室名</th><td><span th:text = "${manager.classArea}"></span>教室</td>
-					<th>講師氏名</th><td class="cell-blue"><span th:text = "${user.userName}"></span></td>
+					<th>講師氏名</th><td><span th:text = "${user.userName}"></span></td>
 					<td colspan = "2"><span th:text = "${year+'年'+month+'月分　'+monthBefore+'月26日〜'+month+'月25日'}"></span></td>
 				</tr>
 			</table>
@@ -98,9 +97,9 @@
 				</tr>
 				<th:block th:if = "${!#lists.isEmpty(workList)}">
 				<tr th:each = "w : ${workList}">
-					<td class="cell-blue"><a th:href = "@{/setForm(manager=${manager.id}, user=${user.id}, edit=${w.id}, year=${year}, month=${month})}"><span th:text = "${w.date.substring(5,10).replace('-','月')+'日'}"></span></a></td>
+					<td><a th:href = "@{/setForm(manager=${manager.id}, user=${user.id}, edit=${w.id}, year=${year}, month=${month})}"><span th:text = "${w.date.substring(5,10).replace('-','月')+'日'}"></span></a></td>
 					<td th:text = "${w.dayOfWeek}"></td>
-					<td class="cell-blue">
+					<td>
 						<th:block th:if = "${w.classM}"><span th:text = "'M'"></span></th:block>
 						<th:block th:if = "${w.classK}"><span th:text = "'K'"></span></th:block>
 						<th:block th:if = "${w.classS}"><span th:text = "'S'"></span></th:block>
@@ -114,15 +113,15 @@
 					<td th:text = "${w.timeStart}"></td>
 					<td th:text = "${w.timeEnd}"></td>
 					<td><th:block th:if = "${w.breakTime != 0}"><span th:text = "${w.breakTime}"></span></th:block></td>
-					<td class="cell-blue" th:text = "${w.officeTimeStart}"></td>
-					<td class="cell-blue" th:text = "${w.officeTimeEnd}"></td>
+					<td th:text = "${w.officeTimeStart}"></td>
+					<td th:text = "${w.officeTimeEnd}"></td>
 					<td><th:block th:if = "${w.officeTime != 0}"><span th:text = "${w.officeTime}"></span></th:block></td>
 					<td><th:block th:if = "${w.supportSalary == 'true'}"><span th:text = "${salaryMap.get(w.id).supportSalary}"></span></th:block></td>
 					<td><th:block th:if = "${w.carfare != 0}"><span th:text = "${w.carfare}"></span></th:block></td>
-					<td class="cell-blue" th:text = "${w.otherWork}"></td>
-					<td class="cell-blue" th:text = "${w.otherTimeStart}"></td>
-					<td class="cell-blue" th:text = "${w.otherTimeEnd}"></td>
-					<td class="cell-blue"><th:block th:if = "${w.otherBreakTime != 0}"><span th:text = "${w.otherBreakTime}"></span></th:block></td>
+					<td th:text = "${w.otherWork}"></td>
+					<td th:text = "${w.otherTimeStart}"></td>
+					<td th:text = "${w.otherTimeEnd}"></td>
+					<td><th:block th:if = "${w.otherBreakTime != 0}"><span th:text = "${w.otherBreakTime}"></span></th:block></td>
 					<td><th:block th:if = "${w.otherTime != 0}"><span th:text = "${w.otherTime}"></span></th:block></td>
 					<td><th:block th:if = "${w.outOfTime != 0}"><span th:text = "${w.outOfTime}"></span></th:block></td>
 					<td><th:block th:if = "${w.overTime != 0}"><span th:text = "${w.overTime}"></span></th:block></td>
