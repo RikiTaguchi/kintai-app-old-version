@@ -27,6 +27,16 @@
 					<input type = "submit" value = "更新">
 				</div>
 			</form>
+			<form th:action="@{/deleteSalary}" method="post">
+				<div style="display: none;">
+					<input type="text" name="deleteId" th:value="${salaryUpdateForm.id}">
+					<input type="text" name="userId" th:value="${user.id}">
+					<input type="text" name="managerId" th:value="${manager.id}">
+					<input type="text" name="year" th:value="${year}">
+					<input type="text" name="month" th:value="${month}">
+				</div>
+				<input type="submit" value="削除">
+			</form>
 		</div>
 		<br>
 		<div>

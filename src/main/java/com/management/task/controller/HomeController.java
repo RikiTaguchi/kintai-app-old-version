@@ -28,6 +28,8 @@ import com.management.task.service.UserService;
 import com.management.task.service.WorkService;
 import com.management.task.service.WorkTemplateService;
 import com.management.task.util.DateSet;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class HomeController {
@@ -698,6 +700,17 @@ public class HomeController {
         redirectAttributes.addAttribute("month", month);
         return "redirect:infoTemplate";
     }
+
+    @PostMapping("/deleteSalary")
+    public String deleteSalary(RedirectAttributes redirectAttributes, @RequestParam("deleteId") String deleteId, @RequestParam("userId") String userId, @RequestParam("managerId") String managerId, @RequestParam("year") String year, @RequestParam("month") String month) {
+        salaryService.delete(salaryService.getBySalaryId(UUID.fromString(deleteId)));
+        redirectAttributes.addAttribute("user", userId);
+        redirectAttributes.addAttribute("manager", managerId);
+        redirectAttributes.addAttribute("year", year);
+        redirectAttributes.addAttribute("month", month);
+        return "redirect:infoSalary";
+    }
+    
     
     // 講師ログイン
     @GetMapping("/login")

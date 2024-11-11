@@ -39,6 +39,11 @@ public class SalaryService {
     public void update(Salary salary) {
         salaryRepository.update(salary.getId(), salary.getUserId(), salary.getDateFrom(), salary.getClassSalary(), salary.getOfficeSalary(), salary.getSupportSalary(), salary.getCarfare());
     }
+
+    @Transactional
+    public void delete(Salary salary) {
+        salaryRepository.delete(salary);
+    }
     
     public Salary getBySalaryId(UUID salaryId) {
         return this.salaryRepository.getBySalaryId(salaryId);
