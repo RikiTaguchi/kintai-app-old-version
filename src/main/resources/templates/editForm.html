@@ -39,7 +39,7 @@
 		<br>
 		<div>
 			シフト修正
-			<form th:action = "@{/editWork}" method = "post" th:object = "${workUpdateForm}">
+			<form th:action = "@{/editForm}" method = "post" th:object = "${workUpdateForm}">
 				<table border="1" style="border-collapse: collapse">
 					<tr><th>勤務日</th><td><div><span th:text = "${workUpdateForm.date.substring(0, 5).replace('-','年')+workUpdateForm.date.substring(5,10).replace('-','月')+'日('+workUpdateForm.dayOfWeek+')'}"></span></div></td></tr>
 					<tr>
@@ -87,7 +87,7 @@
 							<div><label for = "otherWork">内容 - </label><input id = "otherWork" type = "text" th:field = "*{otherWork}"></div>
 							<div><label for = "otherTimeStart">開始 - </label><input id = "otherTimeStart" type = "time" th:field = "*{otherTimeStart}"></div>
 							<div><label for = "otherTimeEnd">終了 - </label><input id = "otherTimeEnd" type = "time" th:field = "*{otherTimeEnd}"></div>
-							<div><label for = "otherBreakTime">休憩 - </label><input id = "otherBreakTime" type = "number" th:field = "*{otherBreakTime}"> 分</div></td>
+							<div><label for = "otherBreakTime">休憩 - </label><input id = "otherBreakTime" type = "number" th:field = "*{otherBreakTime}"> 分</div>
 						</td>
 					</tr>
 				</table>

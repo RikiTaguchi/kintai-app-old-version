@@ -47,6 +47,7 @@ public class HomeController {
         this.workTemplateService = workTemplateService;
     }
     
+    // 講師ホーム画面
     @GetMapping("/index")
     String index(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         Date dateFrom = DateSet.getDatePeriod(year, month)[0];
@@ -87,6 +88,7 @@ public class HomeController {
         return "index";
     }
     
+    // 社員ホーム画面
     @GetMapping("/indexManager")
     String indexManager(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId) {
         Calendar calendar = Calendar.getInstance();
@@ -102,6 +104,7 @@ public class HomeController {
         return "indexManager";
     }
     
+    // 給与詳細（講師用）
     @GetMapping("/detail")
     String detail(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -164,6 +167,7 @@ public class HomeController {
         return "detail";
     }
     
+    // 勤務詳細（講師用）
     @GetMapping("/detailWork")
     String detailWork(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("detail") String detailId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -180,6 +184,7 @@ public class HomeController {
         return "detailWork";
     }
     
+    // 給与詳細（社員用）
     @GetMapping("/detailUser")
     String detailUser(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @Param("year") String year, @Param("month") String month) {
         Date dateFrom = DateSet.getDatePeriod(year, month)[0];
@@ -243,6 +248,7 @@ public class HomeController {
         return "detailUser";
     }
     
+    // 給与推移（講師用）
     @GetMapping("/detailSalary")
     String detailSalary(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -257,6 +263,7 @@ public class HomeController {
         return "detailSalary";
     }
     
+    // テンプレート詳細（講師用）
     @GetMapping("/detailTemplate")
     String detailTemplate(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("template") String templateId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -271,6 +278,7 @@ public class HomeController {
         return "detailTemplate";
     }
     
+    // 給与推移情報（社員用）
     @GetMapping("/infoSalary")
     String infoSalary(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @Param("year") String year, @Param("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -285,6 +293,7 @@ public class HomeController {
         return "infoSalary";
     }
     
+    // 講師基本情報（社員用）
     @GetMapping("/infoUser")
     String infoUser(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -302,6 +311,7 @@ public class HomeController {
         return "infoUser";
     }
     
+    // テンプレート一覧（講師用）
     @GetMapping("/infoTemplate")
     String infoTemplate(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -316,8 +326,9 @@ public class HomeController {
         return "infoTemplate";
     }
     
+    // シフト登録（講師用）
     @GetMapping("/addForm")
-    String addForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String addFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         String yearBefore = DateSet.getDateBefore(year, month)[0];
@@ -337,8 +348,9 @@ public class HomeController {
         return "addForm";
     }
     
+    // テンプレート登録（講師用）
     @GetMapping("/templateForm")
-    String templateForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String templateFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         String yearBefore = DateSet.getDateBefore(year, month)[0];
@@ -356,8 +368,9 @@ public class HomeController {
         return "templateForm";
     }
     
+    // シフト登録（社員用）
     @GetMapping("/createForm")
-    String createForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String createFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         String yearBefore = DateSet.getDateBefore(year, month)[0];
@@ -375,8 +388,9 @@ public class HomeController {
         return "createForm";
     }
     
+    // シフト修正（講師用）
     @GetMapping("/editForm")
-    String editForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String editFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         Work work = workService.findWorkById(UUID.fromString(editId));
@@ -391,8 +405,9 @@ public class HomeController {
         return "editForm";
     }
     
+    // テンプレート修正（講師用）
     @GetMapping("/editTemplateForm")
-    String editTemplateForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String editTemplateFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         WorkTemplate template = workTemplateService.findTemplateById(UUID.fromString(editId));
@@ -405,8 +420,9 @@ public class HomeController {
         return "editTemplateForm";
     }
     
+    // 新規給与情報登録（社員用）
     @GetMapping("/updateForm")
-    String updateForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String updateFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(UUID.fromString(managerId));
         String yearBefore = DateSet.getDateBefore(year, month)[0];
@@ -421,8 +437,9 @@ public class HomeController {
         return "updateForm";
     }
     
+    // シフト修正（社員用）
     @GetMapping("/setForm")
-    String setForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String setFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         Work work = workService.findWorkById(UUID.fromString(editId));
@@ -435,6 +452,7 @@ public class HomeController {
         return "setForm";
     }
     
+    // 講師基本情報（講師用）
     @GetMapping("/user")
     String user(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
@@ -455,8 +473,9 @@ public class HomeController {
         return "user";
     }
     
+    // 講師アカウント情報修正（講師用）
     @GetMapping("/userForm")
-    String account(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String userFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         String yearBefore = DateSet.getDateBefore(year, month)[0];
@@ -472,8 +491,9 @@ public class HomeController {
         return "userForm";
     }
     
+    // 給与情報修正（社員用）
     @GetMapping("/salaryForm")
-    String salaryForm(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("salary") String salaryId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String salaryFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("salary") String salaryId, @RequestParam("year") String year, @RequestParam("month") String month) {
         User user = userService.getByUserId(UUID.fromString(userId));
         Manager manager = managerService.getById(user.getClassAreaId());
         Salary salary = salaryService.getBySalaryId(UUID.fromString(salaryId));
@@ -486,8 +506,9 @@ public class HomeController {
         return "salaryForm";
     }
     
-    @PostMapping("/addWork")
-    String addWork(@ModelAttribute("workCreateForm") Work form, RedirectAttributes redirectAttributes) {
+    // シフト登録（講師用）
+    @PostMapping("/addForm")
+    String addFormPost(@ModelAttribute("workCreateForm") Work form, RedirectAttributes redirectAttributes) {
         String year = DateSet.getYear(form.getDate());
         String month = DateSet.getMonth(form.getDate());
         String dayOfWeek = DateSet.getDayOfWeek(form.getDate());
@@ -505,8 +526,9 @@ public class HomeController {
         }
     }
     
-    @PostMapping("/addTemplate")
-    String addTemplate(@ModelAttribute("templateCreateForm") WorkTemplate form, RedirectAttributes redirectAttributes, @RequestParam("year") String year, @RequestParam("month") String month) {
+    // テンプレート登録（講師用）
+    @PostMapping("/templateForm")
+    String templateFormPost(@ModelAttribute("templateCreateForm") WorkTemplate form, RedirectAttributes redirectAttributes, @RequestParam("year") String year, @RequestParam("month") String month) {
         workTemplateService.add(form);
         redirectAttributes.addAttribute("user", form.getUserId());
         redirectAttributes.addAttribute("year", year);
@@ -514,8 +536,9 @@ public class HomeController {
         return "redirect:infoTemplate";
     }
     
-    @PostMapping("/createWork")
-    String createWork(@ModelAttribute("workCreateForm") Work form, RedirectAttributes redirectAttributes) {
+    // シフト登録（社員用）
+    @PostMapping("/createForm")
+    String createFormPost(@ModelAttribute("workCreateForm") Work form, RedirectAttributes redirectAttributes) {
         String year = DateSet.getYear(form.getDate());
         String month = DateSet.getMonth(form.getDate());
         String dayOfWeek = DateSet.getDayOfWeek(form.getDate());
@@ -536,8 +559,9 @@ public class HomeController {
         }
     }
     
-    @PostMapping("/editWork")
-    String editWork(@ModelAttribute("workUpdateForm") Work form, RedirectAttributes redirectAttributes) {
+    // シフト修正（講師用）
+    @PostMapping("/editForm")
+    String editFormPost(@ModelAttribute("workUpdateForm") Work form, RedirectAttributes redirectAttributes) {
         String year = DateSet.getYear(form.getDate());
         String month = DateSet.getMonth(form.getDate());
         String dayOfWeek = DateSet.getDayOfWeek(form.getDate());
@@ -558,8 +582,9 @@ public class HomeController {
         }
     }
     
-    @PostMapping("/setWork")
-    String setWork(@ModelAttribute("workUpdateForm") Work form, RedirectAttributes redirectAttributes) {
+    // シフト修正（社員用）
+    @PostMapping("/setForm")
+    String setFormPost(@ModelAttribute("workUpdateForm") Work form, RedirectAttributes redirectAttributes) {
         String year = DateSet.getYear(form.getDate());
         String month = DateSet.getMonth(form.getDate());
         String dayOfWeek = DateSet.getDayOfWeek(form.getDate());
@@ -581,6 +606,7 @@ public class HomeController {
         }
     }
     
+    // シフト削除（講師用）
     @PostMapping("/deleteWork")
     String deleteWork(@Param("userId") String userId, @Param("deleteId") String deleteId, RedirectAttributes redirectAttributes) {
         Work work = workService.findWorkById(UUID.fromString(deleteId));
@@ -593,6 +619,7 @@ public class HomeController {
         return "redirect:index";
     }
     
+    // シフト削除（社員用）
     @PostMapping("/clearWork")
     String clearWork(@Param("managerId") String managerId, @Param("userId") String userId, @Param("deleteId") String deleteId, RedirectAttributes redirectAttributes) {
         Work work = workService.findWorkById(UUID.fromString(deleteId));
@@ -606,8 +633,9 @@ public class HomeController {
         return "redirect:detailUser";
     }
     
-    @PostMapping("/editUser")
-    String editUser(@ModelAttribute("userUpdateForm") User form, RedirectAttributes redirectAttributes) {
+    // 講師アカウント情報修正（講師用）
+    @PostMapping("/userForm")
+    String userFormPost(@ModelAttribute("userUpdateForm") User form, RedirectAttributes redirectAttributes) {
         Calendar calendar = Calendar.getInstance();
         String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
         String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -618,8 +646,9 @@ public class HomeController {
         return "redirect:user";
     }
     
-    @PostMapping("/updateUser")
-    String updateUser(@ModelAttribute("salaryUpdateForm") Salary form, RedirectAttributes redirectAttributes) {
+    // 新規給与情報登録（社員用）
+    @PostMapping("/updateForm")
+    String updateFormPost(@ModelAttribute("salaryUpdateForm") Salary form, RedirectAttributes redirectAttributes) {
         Calendar calendar = Calendar.getInstance();
         String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
         String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -633,8 +662,9 @@ public class HomeController {
         return "redirect:infoUser";
     }
     
-    @PostMapping("/updateSalary")
-    String updateSalary(@ModelAttribute("salaryUpdateForm") Salary form, RedirectAttributes redirectAttributes) {
+    // 給与情報修正（社員用）
+    @PostMapping("/salaryForm")
+    String salaryFormPost(@ModelAttribute("salaryUpdateForm") Salary form, RedirectAttributes redirectAttributes) {
         Calendar calendar = Calendar.getInstance();
         String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
         String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -648,8 +678,9 @@ public class HomeController {
         return "redirect:infoSalary";
     }
     
-    @PostMapping("/updateTemplate")
-    String updateTemplate(@ModelAttribute("templateUpdateForm") WorkTemplate form, RedirectAttributes redirectAttributes, @RequestParam("year") String year, @RequestParam("month") String month) {
+    // テンプレート修正（講師用）
+    @PostMapping("/editTemplateForm")
+    String editTemplateFormPost(@ModelAttribute("templateUpdateForm") WorkTemplate form, RedirectAttributes redirectAttributes, @RequestParam("year") String year, @RequestParam("month") String month) {
         workTemplateService.update(form);
         redirectAttributes.addAttribute("user", form.getUserId());
         redirectAttributes.addAttribute("template", form.getId());
@@ -658,6 +689,7 @@ public class HomeController {
         return "redirect:detailTemplate";
     }
     
+    // テンプレート削除（講師用）
     @PostMapping("/deleteTemplate")
     String deleteTemplate(RedirectAttributes redirectAttributes, @RequestParam("deleteId") String deleteId, @RequestParam("userId") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         workTemplateService.deleteById(UUID.fromString(deleteId));
@@ -667,20 +699,23 @@ public class HomeController {
         return "redirect:infoTemplate";
     }
     
+    // 講師ログイン
     @GetMapping("/login")
-    String login(Model model) {
+    String loginGet(Model model) {
         model.addAttribute("userLoginForm", new User());
         return "login";
     }
     
+    // 社員ログイン
     @GetMapping("/loginManager")
-    String loginHost(Model model) {
+    String loginManagerGet(Model model) {
         model.addAttribute("managerLoginForm", new Manager());
         return "loginManager";
     }
     
-    @PostMapping("/loginCheck")
-    String loginCheck(@ModelAttribute("userLoginForm") User loginUser, RedirectAttributes redirectAttributes) {
+    // 講師ログイン
+    @PostMapping("/login")
+    String loginPost(@ModelAttribute("userLoginForm") User loginUser, RedirectAttributes redirectAttributes) {
         User trueUser = userService.getByLoginId(loginUser.getLoginId());
         if (trueUser == null || !trueUser.getPassword().equals(loginUser.getPassword())) {
             return "redirect:login";
@@ -696,8 +731,9 @@ public class HomeController {
         }
     }
     
-    @PostMapping("/loginManagerCheck")
-    String loginManagerCheck(@ModelAttribute("managerLoginForm") Manager loginManager, RedirectAttributes redirectAttributes) {
+    // 社員ログイン
+    @PostMapping("/loginManager")
+    String loginManagerPost(@ModelAttribute("managerLoginForm") Manager loginManager, RedirectAttributes redirectAttributes) {
         Manager trueManager = managerService.getByLoginId(loginManager.getLoginId());
         if (trueManager == null || !trueManager.getPassword().equals(loginManager.getPassword())) {
             return "redirect:loginManager";
@@ -708,8 +744,9 @@ public class HomeController {
         }
     }
     
+    // 講師アカウント作成
     @GetMapping("/signUp")
-    String signUp(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId) {
+    String signUpGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId) {
         Manager manager = managerService.getById(UUID.fromString(managerId));
         User user = new User();
         Salary salary = new Salary();
@@ -720,14 +757,16 @@ public class HomeController {
         return "signUp";
     }
     
+    // 社員アカウント作成
     @GetMapping("/signUpManager")
-    String signUpManager(Model model) {
+    String signUpManagerGet(Model model) {
         model.addAttribute("managerCreateForm", new Manager());
         return "signUpManager";
     }
     
-    @PostMapping("/addUser")
-    String addUser(@ModelAttribute("userCreateForm") User user, @ModelAttribute("salaryCreateForm") Salary salary, RedirectAttributes redirectAttributes) {
+    // 講師アカウント作成
+    @PostMapping("/signUp")
+    String signUpPost(@ModelAttribute("userCreateForm") User user, @ModelAttribute("salaryCreateForm") Salary salary, RedirectAttributes redirectAttributes) {
         userService.add(user);
         User setUser = userService.getByLoginId(user.getLoginId());
         salary.setUserId(setUser.getId());
@@ -736,8 +775,9 @@ public class HomeController {
         return "redirect:indexManager";
     }
     
-    @PostMapping("/addManager")
-    String addManager(@ModelAttribute("managerCreateForm") Manager manager) {
+    // 社員アカウント作成
+    @PostMapping("/signUpManager")
+    String signUpManagerPost(@ModelAttribute("managerCreateForm") Manager manager) {
         managerService.add(manager.getLoginId(), manager.getPassword(), manager.getClassArea());
         return "redirect:loginManager";
     }
