@@ -940,6 +940,15 @@ public class HomeController {
     @GetMapping("/deleteUser")
     public String deleteUser(RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("manager") String managerId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
+            for (Work work : workService.findAllByUserId(UUID.fromString(userId))) {
+                workService.deleteById(work.getId());
+            }
+            for (Salary salary : salaryService.findByUserId(UUID.fromString(userId))) {
+                salaryService.delete(salary);
+            }
+            for (WorkTemplate template : workTemplateService.findByUserId(UUID.fromString(userId))) {
+                workTemplateService.deleteById(template.getId());
+            }
             userService.deleteById(UUID.fromString(userId));
             redirectAttributes.addAttribute("manager", managerId);
             return "redirect:indexManager";
