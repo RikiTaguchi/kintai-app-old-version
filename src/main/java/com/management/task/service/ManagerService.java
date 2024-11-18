@@ -23,8 +23,8 @@ public class ManagerService {
         return this.managerRepository.findAll();
     }
     
-    public Manager getById(UUID managerId) {
-        return this.managerRepository.getById(managerId);
+    public Manager getByManagerId(UUID managerId) {
+        return this.managerRepository.getByManagerId(managerId);
     }
     
     public void add(String loginId, String password, String classArea) {
