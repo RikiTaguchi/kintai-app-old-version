@@ -82,6 +82,8 @@
 - signUpManager: 社員アカウント登録
 - signUp: 講師アカウント登録
 - indexManager: ホーム画面
+- infoManager: 社員アカウント情報詳細
+- editManagerForm: 社員アカウント情報修正
 ##### 講師関連
 - createForm: シフト登録
 - detailUser: 給与詳細、シフト詳細
