@@ -3,7 +3,6 @@ package com.management.task.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.management.task.model.Manager;
@@ -16,7 +15,6 @@ public class ManagerService {
     
     private final ManagerRepository managerRepository;
     
-    @Autowired
     public ManagerService(ManagerRepository managerRepository) {
         this.managerRepository = managerRepository;
     }
