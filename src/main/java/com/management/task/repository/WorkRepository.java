@@ -17,6 +17,9 @@ public interface WorkRepository extends JpaRepository<Work, UUID>{
     
     @Query(nativeQuery = true, value = "SELECT * FROM works WHERE id = :id LIMIT 1")
     Work findWorkById(@Param("id") UUID id);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM works WHERE userid = :userid")
+    List<Work> findAllByUserId(@Param("userid") UUID userid);
     
     @Query(nativeQuery = true, value = "SELECT SUM(classcount) FROM works WHERE userid = :userid and date BETWEEN :datefrom AND :dateto")
     int sumClassCount(@Param("userid") UUID userid, @Param("datefrom") String datefrom, @Param("dateto") String dateto);

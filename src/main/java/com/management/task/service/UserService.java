@@ -31,6 +31,10 @@ public class UserService {
     public void add(User user) {
         userRepository.save(user);
     }
+
+    public void deleteById(UUID userId) {
+        userRepository.deleteById(userId);
+    }
     
     @Transactional
     public void update(User user) {
