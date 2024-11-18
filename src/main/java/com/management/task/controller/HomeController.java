@@ -28,6 +28,10 @@ import com.management.task.service.WorkService;
 import com.management.task.service.WorkTemplateService;
 import com.management.task.util.DateSet;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 public class HomeController {
     
@@ -811,12 +815,22 @@ public class HomeController {
     
     // 講師アカウント情報修正（講師用）
     @PostMapping("/userForm")
-    String userFormPost(@ModelAttribute("userUpdateForm") User form, RedirectAttributes redirectAttributes) {
+    String userFormPost(HttpServletResponse response, @ModelAttribute("userUpdateForm") User form, RedirectAttributes redirectAttributes) {
         try {
             Calendar calendar = Calendar.getInstance();
             String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             userService.update(form);
+            Cookie cookieLoginId = new Cookie("userLoginId", form.getLoginId());
+            cookieLoginId.setMaxAge(30 * 24 * 60 * 60);
+            cookieLoginId.setHttpOnly(true);
+            cookieLoginId.setPath("/");
+            response.addCookie(cookieLoginId);
+            Cookie cookiePassword = new Cookie("userPassword", form.getPassword());
+            cookiePassword.setMaxAge(30 * 24 * 60 * 60);
+            cookiePassword.setHttpOnly(true);
+            cookiePassword.setPath("/");
+            response.addCookie(cookiePassword);
             redirectAttributes.addAttribute("user", form.getId());
             redirectAttributes.addAttribute("year", year);
             redirectAttributes.addAttribute("month", month);
@@ -953,9 +967,19 @@ public class HomeController {
 
     // 社員アカウント情報更新（社員用）
     @PostMapping("/editManagerForm")
-    String editManagerFormPost(RedirectAttributes redirectAttributes, @ModelAttribute("managerUpdateForm") Manager manager) {
+    String editManagerFormPost(HttpServletResponse response, RedirectAttributes redirectAttributes, @ModelAttribute("managerUpdateForm") Manager manager) {
         try {
             managerService.update(manager);
+            Cookie cookieLoginId = new Cookie("managerLoginId", manager.getLoginId());
+            cookieLoginId.setMaxAge(30 * 24 * 60 * 60);
+            cookieLoginId.setHttpOnly(true);
+            cookieLoginId.setPath("/");
+            response.addCookie(cookieLoginId);
+            Cookie cookiePassword = new Cookie("managerPassword", manager.getPassword());
+            cookiePassword.setMaxAge(30 * 24 * 60 * 60);
+            cookiePassword.setHttpOnly(true);
+            cookiePassword.setPath("/");
+            response.addCookie(cookiePassword);
             redirectAttributes.addAttribute("manager", manager.getId());
             return "redirect:infoManager";
         } catch (Exception e) {
@@ -967,7 +991,7 @@ public class HomeController {
 
     // 社員アカウント削除（社員用）
     @GetMapping("/deleteManager")
-    String deleteManager(RedirectAttributes redirectAttributes, @RequestParam("delete") String deleteId) {
+    String deleteManager(HttpServletResponse response, RedirectAttributes redirectAttributes, @RequestParam("delete") String deleteId) {
         try {
             Manager manager = managerService.getByManagerId(UUID.fromString(deleteId));
             List<User> userList = userService.findByClassAreaId(manager.getId());
@@ -983,6 +1007,14 @@ public class HomeController {
                 }
                 userService.deleteById(user.getId());
             }
+            Cookie cookieLoginId = new Cookie("managerLoginId", null);
+            cookieLoginId.setMaxAge(0);
+            cookieLoginId.setPath("/");
+            response.addCookie(cookieLoginId);
+            Cookie cookiePassword = new Cookie("managerPassword", null);
+            cookiePassword.setMaxAge(0);
+            cookiePassword.setPath("/");
+            response.addCookie(cookiePassword);
             managerService.deleteById(manager);
             return "redirect:loginManager";
         } catch (Exception e) {
@@ -994,9 +1026,20 @@ public class HomeController {
     
     // 講師ログイン（講師用）
     @GetMapping("/login")
-    String loginGet(Model model) {
+    String loginGet(HttpServletRequest request, Model model) {
         try {
-            model.addAttribute("userLoginForm", new User());
+            User user = new User();
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("userLoginId".equals(cookie.getName())) {
+                        user.setLoginId(cookie.getValue());
+                    } else if ("userPassword".equals(cookie.getName())) {
+                        user.setPassword(cookie.getValue());
+                    }
+                }
+            }
+            model.addAttribute("userLoginForm", user);
             return "login";
         } catch (Exception e) {
             System.out.println("Error happened in login.html");
@@ -1007,9 +1050,20 @@ public class HomeController {
     
     // 社員ログイン（社員用）
     @GetMapping("/loginManager")
-    String loginManagerGet(Model model) {
+    String loginManagerGet(HttpServletRequest request, Model model) {
         try {
-            model.addAttribute("managerLoginForm", new Manager());
+            Manager manager = new Manager();
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("managerLoginId".equals(cookie.getName())) {
+                        manager.setLoginId(cookie.getValue());
+                    } else if ("managerPassword".equals(cookie.getName())) {
+                        manager.setPassword(cookie.getValue());
+                    }
+                }
+            }
+            model.addAttribute("managerLoginForm", manager);
             return "loginManager";
         } catch (Exception e) {
             System.out.println("Error happened in loginManager.html");
@@ -1020,12 +1074,22 @@ public class HomeController {
     
     // 講師ログイン（講師用）
     @PostMapping("/login")
-    String loginPost(@ModelAttribute("userLoginForm") User loginUser, RedirectAttributes redirectAttributes) {
+    String loginPost(HttpServletResponse response, @ModelAttribute("userLoginForm") User loginUser, RedirectAttributes redirectAttributes) {
         try {
             User trueUser = userService.getByLoginId(loginUser.getLoginId());
             if (trueUser == null || !trueUser.getPassword().equals(loginUser.getPassword())) {
                 return "redirect:login";
             } else {
+                Cookie cookieLoginId = new Cookie("userLoginId", trueUser.getLoginId());
+                cookieLoginId.setMaxAge(30 * 24 * 60 * 60);
+                cookieLoginId.setHttpOnly(true);
+                cookieLoginId.setPath("/");
+                response.addCookie(cookieLoginId);
+                Cookie cookiePassword = new Cookie("userPassword", trueUser.getPassword());
+                cookiePassword.setMaxAge(30 * 24 * 60 * 60);
+                cookiePassword.setHttpOnly(true);
+                cookiePassword.setPath("/");
+                response.addCookie(cookiePassword);
                 UUID userId = trueUser.getId();                        
                 Calendar calendar = Calendar.getInstance();
                 String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -1044,12 +1108,22 @@ public class HomeController {
     
     // 社員ログイン（社員用）
     @PostMapping("/loginManager")
-    String loginManagerPost(@ModelAttribute("managerLoginForm") Manager loginManager, RedirectAttributes redirectAttributes) {
+    String loginManagerPost(HttpServletResponse response, @ModelAttribute("managerLoginForm") Manager loginManager, RedirectAttributes redirectAttributes) {
         try {
             Manager trueManager = managerService.getByLoginId(loginManager.getLoginId());
             if (trueManager == null || !trueManager.getPassword().equals(loginManager.getPassword())) {
                 return "redirect:loginManager";
             } else {
+                Cookie cookieLoginId = new Cookie("managerLoginId", trueManager.getLoginId());
+                cookieLoginId.setMaxAge(30 * 24 * 60 * 60);
+                cookieLoginId.setHttpOnly(true);
+                cookieLoginId.setPath("/");
+                response.addCookie(cookieLoginId);
+                Cookie cookiePassword = new Cookie("managerPassword", trueManager.getPassword());
+                cookiePassword.setMaxAge(30 * 24 * 60 * 60);
+                cookiePassword.setHttpOnly(true);
+                cookiePassword.setPath("/");
+                response.addCookie(cookiePassword);
                 UUID managerId = trueManager.getId();
                 redirectAttributes.addAttribute("manager", managerId);
                 return "redirect:indexManager";
@@ -1117,10 +1191,20 @@ public class HomeController {
     
     // 社員アカウント作成（社員用）
     @PostMapping("/signUpManager")
-    String signUpManagerPost(@ModelAttribute("managerCreateForm") Manager manager) {
+    String signUpManagerPost(HttpServletResponse response, @ModelAttribute("managerCreateForm") Manager manager) {
         try {
             if (managerService.getByLoginId(manager.getLoginId()) == null) {
                 managerService.add(manager.getLoginId(), manager.getPassword(), manager.getClassArea());
+                Cookie cookieLoginId = new Cookie("managerLoginId", manager.getLoginId());
+                cookieLoginId.setMaxAge(30 * 24 * 60 * 60);
+                cookieLoginId.setHttpOnly(true);
+                cookieLoginId.setPath("/");
+                response.addCookie(cookieLoginId);
+                Cookie cookiePassword = new Cookie("managerPassword", manager.getPassword());
+                cookiePassword.setMaxAge(30 * 24 * 60 * 60);
+                cookiePassword.setHttpOnly(true);
+                cookiePassword.setPath("/");
+                response.addCookie(cookiePassword);
                 return "redirect:loginManager";
             } else {
                 return "redirect:signUpManager";
