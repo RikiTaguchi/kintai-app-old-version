@@ -56,7 +56,7 @@ public class HomeController {
             String yearNext = DateSet.getDateNext(year, month)[0];
             String monthNext = DateSet.getDateNext(year, month)[1];
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             int sumSalary[] = new int[16];
             double setDouble[] = new double[15];
             double resultDouble[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -99,7 +99,7 @@ public class HomeController {
             Calendar calendar = Calendar.getInstance();
             String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             List<User> userList = userService.findByClassAreaId(UUID.fromString(managerId));
             model.addAttribute("manager", manager);
             model.addAttribute("userList", userList);
@@ -119,7 +119,7 @@ public class HomeController {
     String detail(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Date dateFrom = DateSet.getDatePeriod(year, month)[0];
             Date dateTo = DateSet.getDatePeriod(year, month)[1];
             String yearBefore = DateSet.getDateBefore(year, month)[0];
@@ -188,7 +188,7 @@ public class HomeController {
     String detailWork(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("detail") String detailId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Work work = workService.findWorkById(UUID.fromString(detailId));
             Salary salary = salaryService.getByDate(UUID.fromString(userId), work.getDate());
             model.addAttribute("user", user);
@@ -217,7 +217,7 @@ public class HomeController {
             String yearNext = DateSet.getDateNext(year, month)[0];
             String monthNext = DateSet.getDateNext(year, month)[1];
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
             Map<UUID, Salary> salaryMap = new HashMap<>();
             int sumSalaryPre[] = new int[17];
@@ -281,7 +281,7 @@ public class HomeController {
     String detailSalary(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             List<Salary> salaryList = salaryService.findByUserId(UUID.fromString(userId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -302,7 +302,7 @@ public class HomeController {
     String detailTemplate(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("template") String templateId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             WorkTemplate template = workTemplateService.findTemplateById(UUID.fromString(templateId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -323,7 +323,7 @@ public class HomeController {
     String infoSalary(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @Param("year") String year, @Param("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             List<Salary> salaryList = salaryService.findByUserId(UUID.fromString(userId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -344,7 +344,7 @@ public class HomeController {
     String infoUser(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             Calendar calendar = Calendar.getInstance();
             String year = String.format("%04d", calendar.get(Calendar.YEAR));
             String month = String.format("%02d", calendar.get(Calendar.MONTH)+1);
@@ -368,7 +368,7 @@ public class HomeController {
     String infoTemplate(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             List<WorkTemplate> templateList = workTemplateService.findByUserId(UUID.fromString(userId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -388,7 +388,7 @@ public class HomeController {
     @GetMapping("/infoManager")
     String infoManager(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId) {
         try {
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             List<User> userList = userService.findByClassAreaId(manager.getId());
             model.addAttribute("manager", manager);
             model.addAttribute("userList", userList);
@@ -405,7 +405,7 @@ public class HomeController {
     String addFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             String yearBefore = DateSet.getDateBefore(year, month)[0];
             String monthBefore = DateSet.getDateBefore(year, month)[1];
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
@@ -433,7 +433,7 @@ public class HomeController {
     String templateFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             String yearBefore = DateSet.getDateBefore(year, month)[0];
             String monthBefore = DateSet.getDateBefore(year, month)[1];
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
@@ -459,7 +459,7 @@ public class HomeController {
     String createFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             String yearBefore = DateSet.getDateBefore(year, month)[0];
             String monthBefore = DateSet.getDateBefore(year, month)[1];
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
@@ -485,7 +485,7 @@ public class HomeController {
     String editFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Work work = workService.findWorkById(UUID.fromString(editId));
             List<WorkTemplate> templateList = workTemplateService.findByUserId(UUID.fromString(userId));
             model.addAttribute("user", user);
@@ -508,7 +508,7 @@ public class HomeController {
     String editTemplateFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             WorkTemplate template = workTemplateService.findTemplateById(UUID.fromString(editId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -529,7 +529,7 @@ public class HomeController {
     String updateFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             String yearBefore = DateSet.getDateBefore(year, month)[0];
             String monthBefore = DateSet.getDateBefore(year, month)[1];
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
@@ -552,7 +552,7 @@ public class HomeController {
     String setFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Work work = workService.findWorkById(UUID.fromString(editId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -573,7 +573,7 @@ public class HomeController {
     String user(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Calendar calendar = Calendar.getInstance();
             String yearNow = String.format("%04d", calendar.get(Calendar.YEAR));
             String monthNow = String.format("%02d", calendar.get(Calendar.MONTH)+1);
@@ -600,7 +600,7 @@ public class HomeController {
     String userFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             String yearBefore = DateSet.getDateBefore(year, month)[0];
             String monthBefore = DateSet.getDateBefore(year, month)[1];
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
@@ -624,7 +624,7 @@ public class HomeController {
     String salaryFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("salary") String salaryId, @RequestParam("year") String year, @RequestParam("month") String month) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Salary salary = salaryService.getBySalaryId(UUID.fromString(salaryId));
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
@@ -690,7 +690,7 @@ public class HomeController {
             String month = DateSet.getMonth(form.getDate());
             String dayOfWeek = DateSet.getDayOfWeek(form.getDate());
             User user = userService.getByUserId(form.getUserId());
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             form.setDayOfWeek(dayOfWeek);
             form.setSupportSalary("true");
             redirectAttributes.addAttribute("user", user.getId());
@@ -748,7 +748,7 @@ public class HomeController {
             String month = DateSet.getMonth(form.getDate());
             String dayOfWeek = DateSet.getDayOfWeek(form.getDate());
             User user = userService.getByUserId(form.getUserId());
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             form.setDayOfWeek(dayOfWeek);
             form.setSupportSalary("true");
             redirectAttributes.addAttribute("user", form.getUserId());
@@ -836,7 +836,7 @@ public class HomeController {
             String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             User user = userService.getByUserId(form.getUserId());
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             salaryService.add(form);
             redirectAttributes.addAttribute("user", user.getId());
             redirectAttributes.addAttribute("manager", manager.getId());
@@ -858,7 +858,7 @@ public class HomeController {
             String year = DateSet.getYear(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             String month = DateSet.getMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)+1, calendar.get(Calendar.DAY_OF_MONTH));
             User user = userService.getByUserId(form.getUserId());
-            Manager manager = managerService.getById(user.getClassAreaId());
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
             salaryService.update(form);
             redirectAttributes.addAttribute("user", user.getId());
             redirectAttributes.addAttribute("manager", manager.getId());
@@ -940,7 +940,7 @@ public class HomeController {
     @GetMapping("/editManagerForm")
     String editManagerFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("edit") String editId) {
         try {
-            Manager manager = managerService.getById(UUID.fromString(editId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(editId));
             model.addAttribute("manager", manager);
             model.addAttribute("managerUpdateForm", manager);
             return "editManagerForm";
@@ -969,7 +969,7 @@ public class HomeController {
     @GetMapping("/deleteManager")
     String deleteManager(RedirectAttributes redirectAttributes, @RequestParam("delete") String deleteId) {
         try {
-            Manager manager = managerService.getById(UUID.fromString(deleteId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(deleteId));
             List<User> userList = userService.findByClassAreaId(manager.getId());
             for (User user : userList) {
                 for (Work work : workService.findAllByUserId(user.getId())) {
@@ -1065,7 +1065,7 @@ public class HomeController {
     @GetMapping("/signUp")
     String signUpGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId) {
         try {
-            Manager manager = managerService.getById(UUID.fromString(managerId));
+            Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             User user = new User();
             Salary salary = new Salary();
             user.setClassAreaId(manager.getId());
@@ -1097,12 +1097,17 @@ public class HomeController {
     @PostMapping("/signUp")
     String signUpPost(@ModelAttribute("userCreateForm") User user, @ModelAttribute("salaryCreateForm") Salary salary, RedirectAttributes redirectAttributes) {
         try {
-            userService.add(user);
-            User setUser = userService.getByLoginId(user.getLoginId());
-            salary.setUserId(setUser.getId());
-            salaryService.add(salary);
-            redirectAttributes.addAttribute("manager", user.getClassAreaId());
-            return "redirect:indexManager";
+            if (userService.getByLoginId(user.getLoginId()) == null) {
+                userService.add(user);
+                User setUser = userService.getByLoginId(user.getLoginId());
+                salary.setUserId(setUser.getId());
+                salaryService.add(salary);
+                redirectAttributes.addAttribute("manager", user.getClassAreaId());
+                return "redirect:indexManager";
+            } else {
+                redirectAttributes.addAttribute("manager", user.getClassAreaId());
+                return "redirect:signUp";
+            }
         } catch (Exception e) {
             System.out.println("Error happened in signUp(post)");
             e.printStackTrace();
@@ -1114,8 +1119,12 @@ public class HomeController {
     @PostMapping("/signUpManager")
     String signUpManagerPost(@ModelAttribute("managerCreateForm") Manager manager) {
         try {
-            managerService.add(manager.getLoginId(), manager.getPassword(), manager.getClassArea());
-            return "redirect:loginManager";
+            if (managerService.getByLoginId(manager.getLoginId()) == null) {
+                managerService.add(manager.getLoginId(), manager.getPassword(), manager.getClassArea());
+                return "redirect:loginManager";
+            } else {
+                return "redirect:signUpManager";
+            }
         } catch (Exception e) {
             System.out.println("Error happened in signUpManager(post)");
             e.printStackTrace();
