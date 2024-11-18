@@ -36,6 +36,10 @@ public class WorkService {
             return this.workRepository.findByUserId(userId, "", "");
         }
     }
+
+    public List<Work> findAllByUserId(UUID userId) {
+        return workRepository.findAllByUserId(userId);
+    }
     
     public Work findWorkById(UUID id) {
         return this.workRepository.findWorkById(id);

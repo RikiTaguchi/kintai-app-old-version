@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.hibernate.sql.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -383,6 +384,22 @@ public class HomeController {
             System.out.println("Error happened in infoTemplate.html");
             e.printStackTrace();
             return "redirect:login";
+        }
+    }
+
+    // アカウント情報（社員用）
+    @GetMapping("/infoManager")
+    String infoManager(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId) {
+        try {
+            Manager manager = managerService.getById(UUID.fromString(managerId));
+            List<User> userList = userService.findByClassAreaId(manager.getId());
+            model.addAttribute("manager", manager);
+            model.addAttribute("userList", userList);
+            return "infoManager";
+        } catch (Exception e) {
+            System.out.println("Error happened in infoManager.html");
+            e.printStackTrace();
+            return "redirect:loginManager";
         }
     }
     
@@ -908,6 +925,75 @@ public class HomeController {
         }
     }
     
+    // 講師削除（社員用）
+    @GetMapping("/deleteUser")
+    public String deleteUser(RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("manager") String managerId, @RequestParam("year") String year, @RequestParam("month") String month) {
+        try {
+            userService.deleteById(UUID.fromString(userId));
+            redirectAttributes.addAttribute("manager", managerId);
+            return "redirect:indexManager";
+        } catch (Exception e) {
+            System.out.println("Error happened in deleteUser(get)");
+            e.printStackTrace();
+            return "redirect:loginManager";
+        }
+    }
+
+    // 社員アカウント情報更新（社員用）
+    @GetMapping("/editManagerForm")
+    String editManagerFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("edit") String editId) {
+        try {
+            Manager manager = managerService.getById(UUID.fromString(editId));
+            model.addAttribute("manager", manager);
+            model.addAttribute("managerUpdateForm", manager);
+            return "editManagerForm";
+        } catch (Exception e) {
+            System.out.println("Error happened in editManagerForm.html");
+            e.printStackTrace();
+            return "redirect:loginManager";
+        }
+    }
+
+    // 社員アカウント情報更新（社員用）
+    @PostMapping("/editManagerForm")
+    String editManagerFormPost(RedirectAttributes redirectAttributes, @ModelAttribute("managerUpdateForm") Manager manager) {
+        try {
+            managerService.update(manager);
+            redirectAttributes.addAttribute("manager", manager.getId());
+            return "redirect:infoManager";
+        } catch (Exception e) {
+            System.out.println("Error happened in editManagerForm(post)");
+            e.printStackTrace();
+            return "redirect:loginManager";
+        }
+    }
+
+    // 社員アカウント削除（社員用）
+    @GetMapping("/deleteManager")
+    String deleteManager(RedirectAttributes redirectAttributes, @RequestParam("delete") String deleteId) {
+        try {
+            Manager manager = managerService.getById(UUID.fromString(deleteId));
+            List<User> userList = userService.findByClassAreaId(manager.getId());
+            for (User user : userList) {
+                for (Work work : workService.findAllByUserId(user.getId())) {
+                    workService.deleteById(work.getId());
+                }
+                for (Salary salary : salaryService.findByUserId(user.getId())) {
+                    salaryService.delete(salary);
+                }
+                for (WorkTemplate template : workTemplateService.findByUserId(user.getId())) {
+                    workTemplateService.deleteById(template.getId());
+                }
+                userService.deleteById(user.getId());
+            }
+            managerService.deleteById(manager);
+            return "redirect:loginManager";
+        } catch (Exception e) {
+            System.out.println("Error happened in deleteManager(get)");
+            e.printStackTrace();
+            return "redirect:loginManager";
+        }
+    }
     
     // 講師ログイン（講師用）
     @GetMapping("/login")

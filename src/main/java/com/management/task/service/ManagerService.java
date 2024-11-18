@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.management.task.model.Manager;
 import com.management.task.repository.ManagerRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ManagerService {
     
@@ -37,6 +39,15 @@ public class ManagerService {
     
     public Manager getByLoginId(String loginId) {
         return this.managerRepository.getByLoginId(loginId);
+    }
+
+    @Transactional
+    public void update(Manager manager) {
+        managerRepository.update(manager.getId(), manager.getLoginId(), manager.getPassword(), manager.getClassArea());
+    }
+
+    public void deleteById(Manager manager) {
+        managerRepository.deleteById(manager.getId());
     }
 
 }
