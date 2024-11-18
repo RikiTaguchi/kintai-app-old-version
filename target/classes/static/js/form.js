@@ -1,3 +1,4 @@
+// テンプレートを自動入力する関数
 function setTemplate(templateId) {
     const classM = document.getElementById('classM');
     const classK = document.getElementById('classK');

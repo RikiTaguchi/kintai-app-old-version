@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>勤怠管理システム</title>
+		<script th:src="@{/js/makeExcel.js}"></script>
 	</head>
 	<body>
 		<div>
@@ -20,6 +21,10 @@
 		<br>
 		<div>
 			<a th:href = "@{/createForm(manager=${manager.id}, user=${user.id}, year=${year}, month=${month})}">シフト登録</a>
+		</div>
+		<br>
+		<div>
+			<button>Download as an Excel file</button>
 		</div>
 		<br>
 		<div>
