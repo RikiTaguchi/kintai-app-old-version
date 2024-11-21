@@ -1,5 +1,8 @@
 package com.management.task.controller;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.net.URLEncoder;
+import java.text.NumberFormat;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -223,9 +232,12 @@ public class HomeController {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearBefore+"-"+monthBefore+"-26");
-            Map<UUID, Salary> salaryMap = new HashMap<>();
+            Map<UUID, String> supportSalaryMap = new HashMap<>();
+            Map<UUID, String> carfareMap = new HashMap<>();
             int sumSalaryPre[] = new int[17];
             int sumSalary[] = new int[17];
+            String sumSalaryFormatted[] = new String[20];
+            NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
             double setDouble[] = new double[16];
             double resultDouble[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
             List<Work> workList = workService.findByUserId(UUID.fromString(userId), dateFrom, dateTo);
@@ -233,7 +245,8 @@ public class HomeController {
                 sumSalary = workService.calcSumSalary(UUID.fromString(userId), dateFrom, dateTo, salary.getClassSalary(), salary.getOfficeSalary(), salary.getSupportSalary());
                 for (Work work : workList) {
                     setDouble = workService.calcSumSalary(work, salaryService.getByDate(UUID.fromString(userId), work.getDate()));
-                    salaryMap.put(work.getId(), salaryService.getByDate(UUID.fromString(userId), work.getDate()));
+                    supportSalaryMap.put(work.getId(), formatter.format(salaryService.getByDate(UUID.fromString(userId), work.getDate()).getSupportSalary()));
+                    carfareMap.put(work.getId(), formatter.format(work.getCarfare()));
                     for (int i = 0; i < 16; i++) {
                         resultDouble[i]+= setDouble[i]; 
                     }
@@ -259,12 +272,47 @@ public class HomeController {
                     sumSalaryPre[i]= 0; 
                 }
             }
+            for (Work work : workList) {
+                if (!work.getTimeStart().equals("     ") && Integer.valueOf(work.getTimeStart().split(":")[0]) < 10) {
+                    work.setTimeStart(Integer.toString(Integer.valueOf(work.getTimeStart().split(":")[0])) + ":" + work.getTimeStart().split(":")[1]);
+                }
+                if (!work.getTimeEnd().equals("     ") && Integer.valueOf(work.getTimeEnd().split(":")[0]) < 10) {
+                    work.setTimeEnd(Integer.toString(Integer.valueOf(work.getTimeEnd().split(":")[0])) + ":" + work.getTimeEnd().split(":")[1]);
+                }
+                if (!work.getOfficeTimeStart().equals("     ") && Integer.valueOf(work.getOfficeTimeStart().split(":")[0]) < 10) {
+                    work.setOfficeTimeStart(Integer.toString(Integer.valueOf(work.getOfficeTimeStart().split(":")[0])) + ":" + work.getOfficeTimeStart().split(":")[1]);
+                }
+                if (!work.getOfficeTimeEnd().equals("     ") && Integer.valueOf(work.getOfficeTimeEnd().split(":")[0]) < 10) {
+                    work.setOfficeTimeEnd(Integer.toString(Integer.valueOf(work.getOfficeTimeEnd().split(":")[0])) + ":" + work.getOfficeTimeEnd().split(":")[1]);
+                }
+                if (!work.getOtherTimeStart().equals("     ") && Integer.valueOf(work.getOtherTimeStart().split(":")[0]) < 10) {
+                    work.setOtherTimeStart(Integer.toString(Integer.valueOf(work.getOtherTimeStart().split(":")[0])) + ":" + work.getOtherTimeStart().split(":")[1]);
+                }
+                if (!work.getOtherTimeEnd().equals("     ") && Integer.valueOf(work.getOtherTimeEnd().split(":")[0]) < 10) {
+                    work.setOtherTimeEnd(Integer.toString(Integer.valueOf(work.getOtherTimeEnd().split(":")[0])) + ":" + work.getOtherTimeEnd().split(":")[1]);
+                }
+            }
+            for (int i = 0; i < sumSalaryFormatted.length; i++) {
+                if (i == 1 || i == 4 || i == 6 || i == 8 || i == 9 || i == 10 || i == 11 || i == 13 || i == 15 || i == 16) {
+                    sumSalaryFormatted[i] = formatter.format(sumSalary[i]);
+                } else if (i == 17) {
+                    sumSalaryFormatted[i] = formatter.format(salary.getCarfare());
+                } else if (i == 18) {
+                    sumSalaryFormatted[i] = formatter.format(salary.getClassSalary());
+                } else if (i == 19) {
+                    sumSalaryFormatted[i] = formatter.format(sumSalary[4] + sumSalary[8] + sumSalary[13] + sumSalary[15]);
+                } else {
+                    sumSalaryFormatted[i] = Integer.toString(sumSalary[i]);
+                }
+            }
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salary", salary);
             model.addAttribute("workList", workList);
             model.addAttribute("sumSalary", sumSalary);
-            model.addAttribute("salaryMap", salaryMap);
+            model.addAttribute("sumSalaryFormatted", sumSalaryFormatted);
+            model.addAttribute("supportSalaryMap", supportSalaryMap);
+            model.addAttribute("carfareMap", carfareMap);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
             model.addAttribute("yearBefore", yearBefore);
@@ -1222,6 +1270,256 @@ public class HomeController {
             System.out.println("Error happened in signUpManager(post)");
             e.printStackTrace();
             return "redirect:loginManager";
+        }
+    }
+
+    // Excelファイルのエクスポート
+    @GetMapping("/downloadExcel")
+    public void downloadExcel(HttpServletResponse response, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+        try {
+
+            // 講師情報・勤務情報
+            User user = userService.getByUserId(UUID.fromString(userId));
+            Manager manager = managerService.getByManagerId(user.getClassAreaId());
+            Date dateFrom = DateSet.getDatePeriod(year, month)[0];
+            Date dateTo = DateSet.getDatePeriod(year, month)[1];
+            List<Work> workList = workService.findByUserId(user.getId(), dateFrom, dateTo);
+
+            // レスポンスヘッダーの設定
+            String fileName = URLEncoder.encode(user.getUserName().replace(" ", "")+"_"+year+"_"+month, StandardCharsets.UTF_8.toString());
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + ".xlsx\"");
+            
+            // テンプレートファイルを読み込み
+            ClassPathResource templateResource = new ClassPathResource("static/excel/excelTemplate.xlsx");
+            InputStream templateInputStream = templateResource.getInputStream();
+            Workbook workbook = new XSSFWorkbook(templateInputStream);
+
+            // テンプレートのシートを取得
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // シート名を変更
+            String sheetName = user.getUserName().replace(" ", "")+"_"+year+"_"+month;
+            workbook.setSheetName(workbook.getSheetIndex(sheet), sheetName);
+
+            // テンプレートのセルにデータを埋め込む
+            String headers[] = new String[8];
+            int cellPointsInHeader[] = {4, 16, 25, 29, 33, 35, 40, 42};
+            for (int i = 0; i < headers.length; i++) {
+                headers[i] = "";
+            }
+            headers[0] = manager.getClassArea();
+            headers[1] = user.getUserName();
+            headers[2] = year;
+            headers[3] = Integer.toString(Integer.valueOf(month));
+            headers[4] = Integer.toString(Integer.valueOf(DateSet.getDateBefore(year, month)[1]));
+            headers[5] = "月26日";
+            headers[6] = Integer.toString(Integer.valueOf(month));
+            headers[7] = "月25日";
+            Row headerRow = sheet.getRow(0);
+            if (headerRow == null) {
+                headerRow = sheet.createRow(0);
+            }
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.getCell(cellPointsInHeader[i]);
+                if (cell == null) {
+                    cell = headerRow.createCell(cellPointsInHeader[i]);
+                }
+                if (i == 2 || i == 3 || i == 4 || i == 6) {
+                    cell.setCellValue(Integer.valueOf(headers[i]));
+                } else {
+                    cell.setCellValue(headers[i]);
+                }
+            }
+            int sumInt[] = new int[11];
+            int cellPointsInSum[] = {1, 4, 7, 11, 15, 19, 23, 27, 31, 39, 42};
+            for (int i = 0; i < sumInt.length; i++) {
+                sumInt[i] = 0;
+            }
+            int rowIndex = 7;
+            int cellPointsInWork[] = {1, 4, 5, 8, 10, 13, 15, 17, 19, 21, 23, 25, 27, 29, 33, 35, 37, 39, 41, 43, 45};
+            for (Work work : workList) {
+                String values[] = new String[21];
+                for (int i = 0; i < values.length; i++) {
+                    values[i] = "";
+                }
+                values[0] = work.getDate().substring(5,10).replace("-","月")+"日";
+                values[1] = work.getDayOfWeek();
+                if (work.getClassM() == true) {
+                    values[2] += "M";
+                }
+                if (work.getClassK() == true) {
+                    values[2] += "K";
+                }
+                if (work.getClassS() == true) {
+                    values[2] += "S";
+                }
+                if (work.getClassA() == true) {
+                    values[2] += "A";
+                }
+                if (work.getClassB() == true) {
+                    values[2] += "B";
+                }
+                if (work.getClassC() == true) {
+                    values[2] += "C";
+                }
+                if (work.getClassD() == true) {
+                    values[2] += "D";
+                }
+                if (work.getClassCount() != 0) {
+                    values[3] = Integer.toString(work.getClassCount());
+                }
+                if (!work.getHelpArea().equals("")) {
+                    values[4] = work.getHelpArea();
+                }
+                if (!work.getTimeStart().equals("     ")) {
+                    if (Integer.valueOf(work.getTimeStart().split(":")[0]) < 10) {
+                        values[5] = Integer.toString(Integer.valueOf(work.getTimeStart().split(":")[0])) + ":" + work.getTimeStart().split(":")[1];
+                    } else {
+                        values[5] = work.getTimeStart();
+                    }
+                }
+                if (!work.getTimeEnd().equals("     ")) {
+                    if (Integer.valueOf(work.getTimeEnd().split(":")[0]) < 10) {
+                        values[6] = Integer.toString(Integer.valueOf(work.getTimeEnd().split(":")[0])) + ":" + work.getTimeEnd().split(":")[1];
+                    } else {
+                        values[6] = work.getTimeEnd();
+                    }
+                }
+                if (work.getBreakTime() != 0) {
+                    values[7] = Integer.toString(work.getBreakTime()/60)+":"+String.format("%02d", work.getBreakTime()%60);
+                }
+                if (!work.getOfficeTimeStart().equals("     ")) {
+                    if (Integer.valueOf(work.getOfficeTimeStart().split(":")[0]) < 10) {
+                        values[8] = Integer.toString(Integer.valueOf(work.getOfficeTimeStart().split(":")[0])) + ":" + work.getOfficeTimeStart().split(":")[1];
+                    } else {
+                        values[8] = work.getOfficeTimeStart();
+                    }
+                }
+                if (!work.getOfficeTimeEnd().equals("     ")) {
+                    if (Integer.valueOf(work.getOfficeTimeEnd().split(":")[0]) < 10) {
+                        values[9] = Integer.toString(Integer.valueOf(work.getOfficeTimeEnd().split(":")[0])) + ":" + work.getOfficeTimeEnd().split(":")[1];
+                    } else {
+                        values[9] = work.getOfficeTimeEnd();
+                    }
+                }
+                if (work.getOfficeTime() != 0) {
+                    values[10] = Integer.toString(work.getOfficeTime()/60)+":"+String.format("%02d", work.getOfficeTime()%60);
+                }
+                if (work.getSupportSalary().equals("true")) {
+                    values[11] = Integer.toString(salaryService.getByDate(user.getId(), work.getDate()).getSupportSalary());
+                }
+                if (work.getCarfare() != 0) {
+                    values[12] = Integer.toString(work.getCarfare());
+                }
+                if (!work.getOtherWork().equals("")) {
+                    values[13] = work.getOtherWork();
+                }
+                if (!work.getOtherTimeStart().equals("     ")) {
+                    if (Integer.valueOf(work.getOtherTimeStart().split(":")[0]) < 10) {
+                        values[15] = Integer.toString(Integer.valueOf(work.getOtherTimeStart().split(":")[0])) + ":" + work.getOtherTimeStart().split(":")[1];
+                    } else {
+                        values[15] = work.getOtherTimeStart();
+                    }
+                }
+                if (!work.getOtherTimeEnd().equals("     ")) {
+                    if (Integer.valueOf(work.getOtherTimeEnd().split(":")[0]) < 10) {
+                        values[15] = Integer.toString(Integer.valueOf(work.getOtherTimeEnd().split(":")[0])) + ":" + work.getOtherTimeEnd().split(":")[1];
+                    } else {
+                        values[15] = work.getOtherTimeEnd();
+                    }
+                }
+                if (work.getOtherBreakTime() != 0) {
+                    values[16] = Integer.toString(work.getOtherBreakTime()/60)+":"+String.format("%02d", work.getOtherBreakTime()%60);
+                }
+                if (work.getOtherTime() != 0) {
+                    values[17] = Integer.toString(work.getOtherTime()/60)+":"+String.format("%02d", work.getOtherTime()%60);
+                }
+                if (work.getOutOfTime() != 0) {
+                    values[18] = Integer.toString(work.getOutOfTime()/60)+":"+String.format("%02d", work.getOutOfTime()%60);
+                }
+                if (work.getOverTime() != 0) {
+                    values[19] = Integer.toString(work.getOverTime()/60)+":"+String.format("%02d", work.getOverTime()%60);
+                }
+                if (work.getNightTime() != 0) {
+                    values[20] = Integer.toString(work.getNightTime()/60)+":"+String.format("%02d", work.getNightTime()%60);
+                }
+                sumInt[0] += work.getClassCount();
+                sumInt[1] += 1;
+                sumInt[2] += work.getOfficeTime();
+                if (work.getSupportSalary().equals("true")) {
+                    sumInt[3] += salaryService.getByDate(user.getId(), work.getDate()).getSupportSalary();
+                }
+                sumInt[4] += work.getCarfare();
+                sumInt[5] += work.getOtherTime();
+                sumInt[6] += work.getOutOfTime();
+                sumInt[7] += work.getOverTime();
+                sumInt[8] += work.getNightTime();
+                Row row = sheet.getRow(rowIndex);
+                if (row == null) {
+                    row = sheet.createRow(rowIndex);
+                }
+                Cell cells[] = new Cell[values.length];
+                for (int i = 0; i < cells.length; i++) {
+                    cells[i] = row.getCell(cellPointsInWork[i]);
+                    if (cells[i] == null) {
+                        cells[i] = row.createCell(cellPointsInWork[i]);
+                    }
+                    if (i == 3 || i == 11 || i == 12) {
+                        if (!values[i].equals("")) {
+                            cells[i].setCellValue(Integer.valueOf(values[i]));
+                        }
+                    } else {
+                        cells[i].setCellValue(values[i]);
+                    }
+                }
+                if (!work.getTimeStart().equals("     ")) {
+                    for (int i = 5; i < 8; i++) {
+                        CellStyle style = workbook.createCellStyle();
+                        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+                        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                        style.setAlignment(HorizontalAlignment.CENTER);
+                        style.setVerticalAlignment(VerticalAlignment.CENTER);
+                        style.setBorderTop(BorderStyle.THIN);
+                        style.setBorderBottom(BorderStyle.THIN);
+                        if (i != 6) {
+                            style.setBorderLeft(BorderStyle.THIN);
+                        } else {
+                            style.setBorderLeft(BorderStyle.DOTTED);
+                        }
+                        style.setTopBorderColor(IndexedColors.BLACK.getIndex());
+                        style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+                        style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+                        cells[i].setCellStyle(style);
+                    }
+                }
+                rowIndex += 1;
+            }
+            if (salaryService.getByDate(user.getId(), workList.get(0).getDate()).getCarfare() != 0) {
+                sumInt[10] = salaryService.getByDate(user.getId(), workList.get(0).getDate()).getCarfare();
+            }
+            for (int i = 0; i < sumInt.length; i++) {
+                if (sumInt[i] != 0) {
+                    Row row = sheet.getRow(3);
+                    if (row == null) {
+                        row = sheet.createRow(3);
+                    }
+                    Cell cell = row.getCell(cellPointsInSum[i]);
+                    if (cell == null) {
+                        cell = row.createCell(cellPointsInSum[i]);
+                    }
+                    cell.setCellValue(sumInt[i]);
+                }
+            }
+
+            // Excelデータをレスポンスに書き込む
+            workbook.write(response.getOutputStream());
+            workbook.close();
+            response.getOutputStream().flush();
+
+        } catch (Exception e) {
+            // エラー処理（jsでリダイレクトさせる）
+            e.printStackTrace();
         }
     }
     
