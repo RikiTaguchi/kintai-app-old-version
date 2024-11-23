@@ -30,9 +30,11 @@
 - 右クリック
 - 「実行 > SpringBootアプリケーション」でサーバー起動
 - コンソールにログが出力されるので、エラーが起きてないか確認
-- 起動が完了したら、以下のリンクにアクセス
-- http://localhost:8080/[任意のhtmlファイル名]
-- 拡張子（.html）は不要です！
+- 起動が完了したら、以下のリンクにアクセスし、ログイン完了後に各画面に遷移できる
+- 講師ログイン
+  - http://localhost:8080/login
+- 社員ログイン
+  - http://localhost:8080/loginManager
 ### VsCode
 - VSCodeで下記プラグインをインストール
   - Java Extension Pack
@@ -40,9 +42,11 @@
   - Lombok Annotations Support for VS Code
 - cloneしたフォルダ（リポジトリ）に移動する
 - Spring Boot Dashboard > APPS > 起動ボタンをクリック
-- 起動が完了したら、以下のリンクにアクセス
-- http://localhost:8080/[任意のhtmlファイル名]
-- 拡張子（.html）は不要です！
+- 起動が完了したら、以下のリンクにアクセスし、ログイン完了後に各画面に遷移できる
+- 講師ログイン
+  - http://localhost:8080/login
+- 社員ログイン
+  - http://localhost:8080/loginManager
   
 ## Appの概要
 - 講師: http://localhost:8080/login
@@ -78,6 +82,8 @@
 - signUpManager: 社員アカウント登録
 - signUp: 講師アカウント登録
 - indexManager: ホーム画面
+- infoManager: 社員アカウント情報詳細
+- editManagerForm: 社員アカウント情報修正
 ##### 講師関連
 - createForm: シフト登録
 - detailUser: 給与詳細、シフト詳細

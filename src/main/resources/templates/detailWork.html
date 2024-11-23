@@ -12,7 +12,7 @@
 		<br>
 		<div>
 			<table border="1" style="border-collapse: collapse">
-				<tr><th>勤務日</th><td><div><span th:text = "${work.date.substring(0, 5).replace('-','/')+work.date.substring(5,10).replace('-','/')+'('+work.dayOfWeek+')'}"></span></div></td></tr>
+				<tr><th>勤務日</th><td><div><span th:text = "${work.date.substring(0, 5).replace('-','/')+work.date.substring(5,10).replace('-','/')+'/'+work.dayOfWeek}"></span></div></td></tr>
 				<tr>
 					<th>勤務コマ</th>
 					<td>
@@ -31,7 +31,10 @@
 				<tr>
 					<th>コマ数</th>
 					<td>
-						<div><span th:text = "${work.classCount}"></span> コマ</div>
+						<div>
+							<th:block th:if="${work.classCount != 0}"><span th:text = "${work.classCount}"></span></th:block>
+							<th:block th:if="${work.classCount == 0}"><span th:text = "'-'"></span></th:block>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -55,12 +58,27 @@
 						</th:block>
 					</td>
 				</tr>
-				<tr><th>休憩</th><td><div><span id = "breakTime" th:text = "${work.breakTime}"></span> 分</div></td></tr>
+				<tr>
+					<th>休憩</th>
+					<td><div>
+						<th:block th:if="${work.breakTime != 0}"><span th:text = "${work.breakTime}"></span>分</th:block>
+						<th:block th:if="${work.breakTime == 0}"><span th:text = "'-'"></span></th:block>
+					</div></td>
+				</tr>
 				<tr>
 					<th>日時手当</th>
-					<td><th:block th:if = "${work.supportSalary == 'true'}"><div><span id = "supportSalary" th:text = "${salary.supportSalary}"></span> 円</div></th:block></td>
+					<td>
+						<th:block th:if = "${work.supportSalary == 'true'}"><div><span th:text = "${supportSalaryFormatted}"></span>円</div></th:block>
+						<th:block th:if = "${work.supportSalary != 'true'}"><div><span th:text = "${'-'}"></span></div></th:block>
+					</td>
 				</tr>
-				<tr><th>交通費</th><td><div><span id = "carfare" th:text = "${work.carfare}"></span> 円</div></td></tr>
+				<tr>
+					<th>交通費</th>
+					<td><div>
+						<th:block th:if="${work.carfare != 0}"><span th:text = "${carfareFormatted}"></span>円</th:block>
+						<th:block th:if="${work.carfare == 0}"><span th:text = "${'-'}"></span></th:block>
+					</div></td>
+				</tr>
 				<tr>
 					<th>事務業務</th>
 					<td>
@@ -80,16 +98,34 @@
 							<div><span id = "otherWork" th:text = "${work.otherWork}"></span></div>
 							<div><label for = "otherTimeStart">開始 - </label><span id = "otherTimeStart" th:text = "${work.otherTimeStart}"></span></div>
 							<div><label for = "otherTimeEnd">終了 - </label><span id = "otherTimeEnd" th:text = "${work.otherTimeEnd}"></span></div>
-							<div><label for = "otherBreakTime">休憩 - </label><span id = "otherBreakTime" th:text = "${work.otherBreakTime}"></span> 分</div>
+							<th:block th:if="${work.otherBreakTime != 0}"><div><label for = "otherBreakTime">休憩 - </label><span id = "otherBreakTime" th:text = "${work.otherBreakTime}"></span>分</div></th:block>
 						</th:block>
 						<th:block th:if = "${!(!work.otherTimeStart.equals('     ') && !work.otherTimeEnd.equals('     '))}">
 							<span th:text = "'-'"></span>
 						</th:block>
 					</td>
 				</tr>
-				<tr><th>時間外</th><td><div><span id = "outOfTime" th:text = "${work.outOfTime}"></span> 分</div></td></tr>
-				<tr><th>超過</th><td><div><span id = "overTime" th:text = "${work.overTime}"></span> 分</div></td></tr>
-				<tr><th>深夜</th><td><div><span id = "nightTime" th:text = "${work.nightTime}"></span> 分</div></td></tr>
+				<tr>
+					<th>時間外</th>
+					<td><div>
+						<th:block th:if="${work.outOfTime != 0}"><span th:text = "${work.outOfTime}"></span>分</th:block>
+						<th:block th:if="${work.outOfTime == 0}"><span th:text = "${'-'}"></span></th:block>
+					</div></td>
+				</tr>
+				<tr>
+					<th>超過</th>
+					<td><div>
+						<th:block th:if="${work.overTime != 0}"><span th:text = "${work.overTime}"></span>分</th:block>
+						<th:block th:if="${work.overTime == 0}"><span th:text = "${'-'}"></span></th:block>
+					</div></td>
+				</tr>
+				<tr>
+					<th>深夜</th>
+					<td><div>
+						<th:block th:if="${work.nightTime != 0}"><span th:text = "${work.nightTime}"></span>分</th:block>
+						<th:block th:if="${work.nightTime == 0}"><span th:text = "${'-'}"></span></th:block>
+					</div></td>
+				</tr>
 			</table>
 			<br>
 			<div>

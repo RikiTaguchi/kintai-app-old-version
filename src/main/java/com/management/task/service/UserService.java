@@ -3,7 +3,6 @@ package com.management.task.service;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ public class UserService {
     
     private final UserRepository userRepository;
     
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -30,6 +28,10 @@ public class UserService {
     
     public void add(User user) {
         userRepository.save(user);
+    }
+
+    public void deleteById(UUID userId) {
+        userRepository.deleteById(userId);
     }
     
     @Transactional

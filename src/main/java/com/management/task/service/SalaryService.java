@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ public class SalaryService {
     
     private final SalaryRepository salaryRepository;
     
-    @Autowired
     public SalaryService(SalaryRepository salaryRepository) {
         this.salaryRepository = salaryRepository;
     }
