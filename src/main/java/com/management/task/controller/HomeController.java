@@ -143,6 +143,8 @@ public class HomeController {
             Map<UUID, Salary> salaryMap = new HashMap<>();
             int sumSalaryPre[] = new int[17];
             int sumSalary[] = new int[17];
+            String sumSalaryFormatted[] = new String[19];
+            NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
             double setDouble[] = new double[16];
             double resultDouble[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
             List<Work> workList = workService.findByUserId(UUID.fromString(userId), dateFrom, dateTo);
@@ -176,10 +178,22 @@ public class HomeController {
                     sumSalaryPre[i]= 0;
                 }
             }
+            for (int i = 0; i < sumSalaryFormatted.length; i++) {
+                if (i == 1 || i == 4 || i == 6 || i == 8 || i == 9 || i == 10 || i == 11 || i == 13 || i == 15 || i == 16) {
+                    sumSalaryFormatted[i] = formatter.format(sumSalary[i]);
+                } else if (i == 17) {
+                    sumSalaryFormatted[i] = formatter.format(salary.getClassSalary());
+                } else if (i == 18) {
+                    sumSalaryFormatted[i] = formatter.format(sumSalary[4] + sumSalary[8] + sumSalary[13] + sumSalary[15]);
+                } else {
+                    sumSalaryFormatted[i] = Integer.toString(sumSalary[i]);
+                }
+            }
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salary", salary);
             model.addAttribute("sumSalary", sumSalary);
+            model.addAttribute("sumSalaryFormatted", sumSalaryFormatted);
             model.addAttribute("salaryMap", salaryMap);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
@@ -204,9 +218,13 @@ public class HomeController {
             Manager manager = managerService.getByManagerId(user.getClassAreaId());
             Work work = workService.findWorkById(UUID.fromString(detailId));
             Salary salary = salaryService.getByDate(UUID.fromString(userId), work.getDate());
+            String supportSalaryFormatted = String.format("%,d", salary.getSupportSalary());
+            String carfareFormatted = String.format("%,d", work.getCarfare());
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salary", salary);
+            model.addAttribute("supportSalaryFormatted", supportSalaryFormatted);
+            model.addAttribute("carfareFormatted", carfareFormatted);
             model.addAttribute("work", work);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
@@ -335,9 +353,19 @@ public class HomeController {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(user.getClassAreaId());
             List<Salary> salaryList = salaryService.findByUserId(UUID.fromString(userId));
+            Map<UUID, String[]> salaryMapFormatted = new HashMap<>();
+            for (Salary salary : salaryList) {
+                String salariesFormatted[] = new String[4];
+                salariesFormatted[0] = String.format("%,d", salary.getClassSalary());
+                salariesFormatted[1] = String.format("%,d", salary.getOfficeSalary());
+                salariesFormatted[2] = String.format("%,d", salary.getSupportSalary());
+                salariesFormatted[3] = String.format("%,d", salary.getCarfare());
+                salaryMapFormatted.put(salary.getId(), salariesFormatted);
+            }
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salaryList", salaryList);
+            model.addAttribute("salaryMapFormatted", salaryMapFormatted);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
             redirectAttributes.addAttribute("user", userId);
@@ -356,9 +384,11 @@ public class HomeController {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(user.getClassAreaId());
             WorkTemplate template = workTemplateService.findTemplateById(UUID.fromString(templateId));
+            String carfareFormatted = String.format("%,d", template.getCarfare());
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("template", template);
+            model.addAttribute("carfareFormatted", carfareFormatted);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
             redirectAttributes.addAttribute("user", userId);
@@ -377,9 +407,19 @@ public class HomeController {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(UUID.fromString(managerId));
             List<Salary> salaryList = salaryService.findByUserId(UUID.fromString(userId));
+            Map<UUID, String[]> salaryMapFormatted = new HashMap<>();
+            for (Salary salary : salaryList) {
+                String salariesFormatted[] = new String[4];
+                salariesFormatted[0] = String.format("%,d", salary.getClassSalary());
+                salariesFormatted[1] = String.format("%,d", salary.getOfficeSalary());
+                salariesFormatted[2] = String.format("%,d", salary.getSupportSalary());
+                salariesFormatted[3] = String.format("%,d", salary.getCarfare());
+                salaryMapFormatted.put(salary.getId(), salariesFormatted);
+            }
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salaryList", salaryList);
+            model.addAttribute("salaryMapFormatted", salaryMapFormatted);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
             redirectAttributes.addAttribute("user", userId);
@@ -402,9 +442,15 @@ public class HomeController {
             String month = String.format("%02d", calendar.get(Calendar.MONTH)+1);
             String day = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
             Salary salary = salaryService.getByDate(UUID.fromString(userId), year+"-"+month+"-"+day);
+            String salaryFormatted[] = new String[4];
+            salaryFormatted[0] = String.format("%,d", salary.getClassSalary());
+            salaryFormatted[1] = String.format("%,d", salary.getOfficeSalary());
+            salaryFormatted[2] = String.format("%,d", salary.getSupportSalary());
+            salaryFormatted[3] = String.format("%,d", salary.getCarfare());
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salary", salary);
+            model.addAttribute("salaryFormatted", salaryFormatted);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
             return "infoUser";
@@ -632,9 +678,15 @@ public class HomeController {
             String dayNow = String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH));
             Salary salary = salaryService.getByDate(UUID.fromString(userId), yearNow+"-"+monthNow+"-"+dayNow);
             List<Salary> salaryList = salaryService.findByUserId(UUID.fromString(userId));
+            String salaryFormatted[] = new String[4];
+            salaryFormatted[0] = String.format("%,d", salary.getClassSalary());
+            salaryFormatted[1] = String.format("%,d", salary.getOfficeSalary());
+            salaryFormatted[2] = String.format("%,d", salary.getSupportSalary());
+            salaryFormatted[3] = String.format("%,d", salary.getCarfare());
             model.addAttribute("user", user);
             model.addAttribute("manager", manager);
             model.addAttribute("salary", salary);
+            model.addAttribute("salaryFormatted", salaryFormatted);
             model.addAttribute("salaryList", salaryList);
             model.addAttribute("year", year);
             model.addAttribute("month", month);

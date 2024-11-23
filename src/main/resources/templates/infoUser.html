@@ -12,10 +12,10 @@
 		<br>
 		<div>
 			<table border="1" style="border-collapse: collapse">
-				<tr><th>コマ給(100分)</th><td th:text = "${'¥'+salary.classSalary}"></td></tr>
-				<tr><th>事務給(60分)</th><td th:text = "${'¥'+salary.officeSalary}"></td></tr>
-				<tr><th>日時手当</th><td th:text = "${'¥'+salary.supportSalary}"></td></tr>
-				<tr><th>交通費(往復)</th><td th:text = "${'¥'+salary.carfare}"></td></tr>
+				<tr><th>コマ給(100分)</th><td th:text = "${'¥'+salaryFormatted[0]}"></td></tr>
+				<tr><th>事務給(60分)</th><td th:text = "${'¥'+salaryFormatted[1]}"></td></tr>
+				<tr><th>日時手当</th><td th:text = "${'¥'+salaryFormatted[2]}"></td></tr>
+				<tr><th>交通費(往復)</th><td th:text = "${'¥'+salaryFormatted[3]}"></td></tr>
 			</table>
 		</div>
 		<br>

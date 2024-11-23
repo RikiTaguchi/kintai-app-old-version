@@ -16,10 +16,10 @@
 				<th:block th:each = "s : ${salaryList}">
 					<tr>
 						<td><a th:href = "@{/salaryForm(manager=${manager.id}, user=${user.id}, salary=${s.id}, year=${year}, month=${month})}"><span th:text = "${s.dateFrom.substring(0, 5).replace('-','/')+s.dateFrom.substring(5,10).replace('-','/')+'〜'}"></span></a></td>
-						<td th:text = "${'¥'+s.classSalary}"></td>
-						<td th:text = "${'¥'+s.officeSalary}"></td>
-						<td th:text = "${'¥'+s.supportSalary}"></td>
-						<td th:text = "${'¥'+s.carfare}"></td>
+						<td th:text = "${'¥'+salaryMapFormatted.get(s.id)[0]}"></td>
+						<td th:text = "${'¥'+salaryMapFormatted.get(s.id)[1]}"></td>
+						<td th:text = "${'¥'+salaryMapFormatted.get(s.id)[2]}"></td>
+						<td th:text = "${'¥'+salaryMapFormatted.get(s.id)[3]}"></td>
 					</tr>
 				</th:block>
 			</table>
