@@ -13,11 +13,11 @@
 		<div>
 			<form th:action = "@{/updateForm}" method = "post" th:object = "${salaryUpdateForm}">
 				<table border="1" style="border-collapse: collapse">
-					<tr><th>対象期間</th><td><div><input id = "dateFrom" type = "date" th:field = "*{dateFrom}"> 〜</div></td></tr>
-					<tr><th>コマ給(90分)</th><td><div><input id = "classSalary" type = "number" th:field = "*{classSalary}"> 円</div></td></tr>
-					<tr><th>事務給(60分)</th><td><div><input id = "officeSalary" type = "number" th:field = "*{officeSalary}"> 円</div></td></tr>
-					<tr><th>日時手当</th><td><div><input id = "supportSalary" type = "number" th:field = "*{supportSalary}"> 円</div></td></tr>
-					<tr><th>交通費(往復)</th><td><div><input id = "carfare" type = "number" th:field = "*{carfare}"> 円</div></td></tr>
+					<tr><th>対象期間</th><td><div><input id = "dateFrom" type = "date" th:field = "*{dateFrom}" required> 〜</div></td></tr>
+					<tr><th>コマ給(90分)</th><td><div><input id = "classSalary" type = "number" th:field = "*{classSalary}" required> 円</div></td></tr>
+					<tr><th>事務給(60分)</th><td><div><input id = "officeSalary" type = "number" th:field = "*{officeSalary}" required> 円</div></td></tr>
+					<tr><th>日時手当</th><td><div><input id = "supportSalary" type = "number" th:field = "*{supportSalary}" required> 円</div></td></tr>
+					<tr><th>交通費(往復)</th><td><div><input id = "carfare" type = "number" th:field = "*{carfare}" required> 円</div></td></tr>
 				</table>
 				<div style = "display: none;">
 					<input id = "id" type = "text" th:field = "*{userId}">

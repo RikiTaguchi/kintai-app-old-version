@@ -13,7 +13,7 @@
 			<form th:action = "@{/signUp}" method = "post">
 				<table border="1" style="border-collapse: collapse">
 					<tr><th>講師名</th><td><div><input id = "userName" type = "text" th:field = "*{userCreateForm.userName}" required></div></td></tr>
-					<tr><th>雇用開始</th><td><div><input id = "dateFrom" type = "date" th:field = "*{salaryCreateForm.dateFrom}" required> 〜</div></td></tr>
+					<tr><th>雇用開始日</th><td><div><input id = "dateFrom" type = "date" th:field = "*{salaryCreateForm.dateFrom}" required></div></td></tr>
 					<tr><th>コマ給(90分)</th><td><div><input id = "classSalary" type = "number" th:field = "*{salaryCreateForm.classSalary}" required> 円</div></td></tr>
 					<tr><th>事務給(60分)</th><td><div><input id = "officeSalary" type = "number" th:field = "*{salaryCreateForm.officeSalary}" required> 円</div></td></tr>
 					<tr><th>日時手当</th><td><div><input id = "supportSalary" type = "number" th:field = "*{salaryCreateForm.supportSalary}" required> 円</div></td></tr>

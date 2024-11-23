@@ -73,8 +73,8 @@
 							<div><label for = "timeEnd">終了 - </label><input id = "timeEnd" type = "time" th:field = "*{timeEnd}"></div>
 						</td>
 					</tr>
-					<tr><th>休憩</th><td><div><input id = "breakTime" type = "number" th:field = "*{breakTime}"> 分</div></td></tr>
-					<tr><th>交通費</th><td><div><input id = "carfare" type = "number" th:field = "*{carfare}"> 円</div></td></tr>
+					<tr><th>休憩</th><td><div><input id = "breakTime" type = "number" th:field = "*{breakTime}" required> 分</div></td></tr>
+					<tr><th>交通費</th><td><div><input id = "carfare" type = "number" th:field = "*{carfare}" required> 円</div></td></tr>
 					<tr>
 						<th>事務</th>
 						<td>
@@ -88,7 +88,7 @@
 							<div><label for = "otherWork">内容 - </label><input id = "otherWork" type = "text" th:field = "*{otherWork}"></div>
 							<div><label for = "otherTimeStart">開始 - </label><input id = "otherTimeStart" type = "time" th:field = "*{otherTimeStart}"></div>
 							<div><label for = "otherTimeEnd">終了 - </label><input id = "otherTimeEnd" type = "time" th:field = "*{otherTimeEnd}"></div>
-							<div><label for = "otherBreakTime">休憩 - </label><input id = "otherBreakTime" type = "number" th:field = "*{otherBreakTime}"> 分</div>
+							<div><label for = "otherBreakTime">休憩 - </label><input id = "otherBreakTime" type = "number" th:field = "*{otherBreakTime}" required> 分</div>
 						</td>
 					</tr>
 				</table>
