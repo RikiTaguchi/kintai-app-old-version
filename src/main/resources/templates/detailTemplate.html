@@ -24,6 +24,9 @@
 						<th:block th:if = "${template.classB}"><span th:text = "'B'"></span></th:block>
 						<th:block th:if = "${template.classC}"><span th:text = "'C'"></span></th:block>
 						<th:block th:if = "${template.classD}"><span th:text = "'D'"></span></th:block>
+						<th:block th:if = "${!template.classM && !template.classK && !template.classS && !template.classA && !template.classB && !template.classC && !template.classD}">
+							<span th:text = "'-'"></span>
+						</th:block>
 						</div>
 					</td>
 				</tr>
@@ -48,8 +51,20 @@
 						</th:block>
 					</td>
 				</tr>
-				<tr><th>休憩</th><td><div><span id = "breakTime" th:text = "${template.breakTime}"></span> 分</div></td></tr>
-				<tr><th>交通費</th><td><div><span id = "carfare" th:text = "${template.carfare}"></span> 円</div></td></tr>
+				<tr>
+					<th>休憩</th>
+					<td><div>
+						<th:block th:if="${template.breakTime != 0}"><span th:text = "${template.breakTime}"></span>分</th:block>
+						<th:block th:if="${template.breakTime == 0}"><span th:text = "'-'"></span></th:block>
+					</div></td>
+				</tr>
+				<tr>
+					<th>交通費</th>
+					<td><div>
+						<th:block th:if="${template.carfare != 0}"><span th:text = "${carfareFormatted}"></span>円</th:block>
+						<th:block th:if="${template.carfare == 0}"><span th:text = "'-'"></span></th:block>
+					</div></td>
+				</tr>
 				<tr>
 					<th>事務業務</th>
 					<td>
@@ -69,7 +84,7 @@
 							<div><span id = "otherWork" th:text = "${template.otherWork}"></span></div>
 							<div><label for = "otherTimeStart">開始 - </label><span id = "otherTimeStart" th:text = "${template.otherTimeStart}"></span></div>
 							<div><label for = "otherTimeEnd">終了 - </label><span id = "otherTimeEnd" th:text = "${template.otherTimeEnd}"></span></div>
-							<div><label for = "otherBreakTime">休憩 - </label><span id = "otherBreakTime" th:text = "${template.otherBreakTime}"></span> 分</div>
+							<th:block th:if="${template.otherBreakTime != 0}"><div><label for = "otherBreakTime">休憩 - </label><span id = "otherBreakTime" th:text = "${template.otherBreakTime}"></span>分</div></th:block>
 						</th:block>
 						<th:block th:if = "${!(!template.otherTimeStart.equals('     ') && !template.otherTimeEnd.equals('     '))}">
 							<span th:text = "'-'"></span>

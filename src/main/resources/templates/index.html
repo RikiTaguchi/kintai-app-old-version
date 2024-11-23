@@ -45,7 +45,7 @@
 					<td>
 						<div>
 						<a th:href = "@{/detailWork(user=${user.id}, detail=${w.id}, year=${year}, month=${month})}">
-						<span th:text = "${w.date.substring(5,10).replace('-','/')+'('+w.dayOfWeek+')'}"></span>
+						<span th:text = "${w.date.substring(5,10).replace('-','/')+'/'+w.dayOfWeek}"></span>
 						</a>
 						</div>
 					</td>
@@ -59,9 +59,7 @@
 						<th:block th:if = "${w.classD}"><span th:text = "'D'"></span></th:block>
 						<th:block th:if = "${w.classCount == 0}"><span th:text = "'-'"></span></th:block>
 					</td>
-					<td>
-						<th:block th:if = "${(w.officeTime + w.otherTime) != 0}"><span th:text = "${w.officeTime + w.otherTime + ' 分'}"></th:block>
-					</td>
+					<td><span th:text = "${(w.officeTime + w.otherTime) != 0 ? w.officeTime + w.otherTime + '分' : '-'}"></span></td>
 				</tr>
 				</th:block>
 			</table>

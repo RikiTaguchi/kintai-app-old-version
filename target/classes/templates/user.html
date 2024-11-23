@@ -13,10 +13,10 @@
 		<div>
 			給与情報<br>
 			<table border="1" style="border-collapse: collapse">
-				<tr><th>コマ給(100分)</th><td><div>¥<span th:text = "${salary.classSalary}"></span></div></td></tr>
-				<tr><th>事務給(60分)</th><td><div>¥<span th:text = "${salary.officeSalary}"></span></div></td></tr>
-				<tr><th>日時手当</th><td><div>¥<span th:text = "${salary.supportSalary}"></span></div></td></tr>
-				<tr><th>交通費(往復)</th><td><div>¥<span th:text = "${salary.carfare}"></span></div></td></tr>
+				<tr><th>コマ給(100分)</th><td><div>¥<span th:text = "${salaryFormatted[0]}"></span></div></td></tr>
+				<tr><th>事務給(60分)</th><td><div>¥<span th:text = "${salaryFormatted[1]}"></span></div></td></tr>
+				<tr><th>日時手当</th><td><div>¥<span th:text = "${salaryFormatted[2]}"></span></div></td></tr>
+				<tr><th>交通費(往復)</th><td><div>¥<span th:text = "${salaryFormatted[3]}"></span></div></td></tr>
 			</table>
 			<div>
 				<a th:href = "@{/detailSalary(user=${user.id}, year=${year}, month=${month})}">給与推移</a>
