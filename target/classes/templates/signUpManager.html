@@ -3,10 +3,12 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>勤怠管理システム</title>
+		<link th:href="@{/css/signUpManager.css}" rel="stylesheet">
 	</head>
 	<body>
 		<div>
-			<h1>アカウント登録</h1>
+			<h1 class="createAccount">アカウント登録</h1>
+			<div class="main">
 			<form th:action = "@{/signUpManager}" method = "post" th:object = "${managerCreateForm}">
 				<div>
 					<label for = "loginId">ログインID</label>
@@ -21,13 +23,15 @@
 					<input id = "classArea" type = "text" th:field = "*{classArea}" required>教室
 				</div>
 				<div>
-					<input type = "submit" value = "登録">
+					<input id = "createButton" type = "submit" value = "登録" style="border:none; border-radius: 5px; color:white; cursor: pointer;">
 				</div>
 			</form>
+			</div>
 		</div>
 		<br>
-		<div>
+		<div class="goLogin">
 			<a th:href="@{/loginManager}">ログイン画面へ</a>
 		</div>
+		<p class="tradeMark">&trade;勤怠管理システムfor学習塾</p>
 	</body>
 </html>
