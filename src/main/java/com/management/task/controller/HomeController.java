@@ -129,7 +129,7 @@ public class HomeController {
     
     // 給与詳細（講師用）
     @GetMapping("/detail")
-    String detail(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String detail(Model model, RedirectAttributes redirectAttributes, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month, @RequestParam("tax") String tax) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(user.getClassAreaId());
@@ -147,6 +147,8 @@ public class HomeController {
             NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
             double setDouble[] = new double[16];
             double resultDouble[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+            int incomeTax;
+            String incomeTaxFormatted;
             List<Work> workList = workService.findByUserId(UUID.fromString(userId), dateFrom, dateTo);
             try {
                 sumSalary = workService.calcSumSalary(UUID.fromString(userId), dateFrom, dateTo, salary.getClassSalary(), salary.getOfficeSalary(), salary.getSupportSalary());
@@ -178,6 +180,17 @@ public class HomeController {
                     sumSalaryPre[i]= 0;
                 }
             }
+            if (tax.equals("on")) {
+                if (sumSalary[1] + sumSalary[4] + sumSalary[8] + sumSalary[6] + sumSalary[9] + sumSalary[10] + sumSalary[13]  + sumSalary[15] >= 88000) {
+                    incomeTax = (int)(((int)((sumSalary[1] + sumSalary[4] + sumSalary[8] + sumSalary[6] + sumSalary[9] + sumSalary[10] + sumSalary[13]  + sumSalary[15] - 88000) / 1000)) * 1000 * 0.05);
+                    sumSalary[16] -= incomeTax;
+                } else {
+                    incomeTax = 0;
+                }
+            } else {
+                incomeTax = 0;
+            }
+            incomeTaxFormatted = formatter.format(incomeTax);
             for (int i = 0; i < sumSalaryFormatted.length; i++) {
                 if (i == 1 || i == 4 || i == 6 || i == 8 || i == 9 || i == 10 || i == 11 || i == 13 || i == 15 || i == 16) {
                     sumSalaryFormatted[i] = formatter.format(sumSalary[i]);
@@ -201,6 +214,8 @@ public class HomeController {
             model.addAttribute("monthBefore", monthBefore);
             model.addAttribute("yearNext", yearNext);
             model.addAttribute("monthNext", monthNext);
+            model.addAttribute("tax", tax);
+            model.addAttribute("incomeTaxFormatted", incomeTaxFormatted);
             redirectAttributes.addAttribute("user", userId);
             return "detail";
         } catch (Exception e) {
