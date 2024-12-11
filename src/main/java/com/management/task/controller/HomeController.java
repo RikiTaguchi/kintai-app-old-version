@@ -239,7 +239,7 @@ public class HomeController {
     
     // 給与詳細（社員用）
     @GetMapping("/detailUser")
-    String detailUser(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @Param("year") String year, @Param("month") String month) {
+    String detailUser(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @Param("year") String year, @Param("month") String month, @Param("tax") String tax) {
         try {
             Date dateFrom = DateSet.getDatePeriod(year, month)[0];
             Date dateTo = DateSet.getDatePeriod(year, month)[1];
@@ -258,6 +258,8 @@ public class HomeController {
             NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
             double setDouble[] = new double[16];
             double resultDouble[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+            int incomeTax;
+            String incomeTaxFormatted;
             List<Work> workList = workService.findByUserId(UUID.fromString(userId), dateFrom, dateTo);
             try {
                 sumSalary = workService.calcSumSalary(UUID.fromString(userId), dateFrom, dateTo, salary.getClassSalary(), salary.getOfficeSalary(), salary.getSupportSalary());
@@ -310,6 +312,17 @@ public class HomeController {
                     work.setOtherTimeEnd(Integer.toString(Integer.valueOf(work.getOtherTimeEnd().split(":")[0])) + ":" + work.getOtherTimeEnd().split(":")[1]);
                 }
             }
+            if (tax.equals("on")) {
+                if (sumSalary[1] + sumSalary[4] + sumSalary[8] + sumSalary[6] + sumSalary[9] + sumSalary[10] + sumSalary[13]  + sumSalary[15] >= 88000) {
+                    incomeTax = (int)(((int)((sumSalary[1] + sumSalary[4] + sumSalary[8] + sumSalary[6] + sumSalary[9] + sumSalary[10] + sumSalary[13]  + sumSalary[15] - 88000) / 1000)) * 1000 * 0.05);
+                    sumSalary[16] -= incomeTax;
+                } else {
+                    incomeTax = 0;
+                }
+            } else {
+                incomeTax = 0;
+            }
+            incomeTaxFormatted = formatter.format(incomeTax);
             for (int i = 0; i < sumSalaryFormatted.length; i++) {
                 if (i == 1 || i == 4 || i == 6 || i == 8 || i == 9 || i == 10 || i == 11 || i == 13 || i == 15 || i == 16) {
                     sumSalaryFormatted[i] = formatter.format(sumSalary[i]);
@@ -337,6 +350,8 @@ public class HomeController {
             model.addAttribute("monthBefore", monthBefore);
             model.addAttribute("yearNext", yearNext);
             model.addAttribute("monthNext", monthNext);
+            model.addAttribute("tax", tax);
+            model.addAttribute("incomeTaxFormatted", incomeTaxFormatted);
             redirectAttributes.addAttribute("manager", managerId);
             return "detailUser";
         } catch (Exception e) {
@@ -554,7 +569,7 @@ public class HomeController {
     
     // シフト登録（社員用）
     @GetMapping("/createForm")
-    String createFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String createFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("year") String year, @RequestParam("month") String month, @RequestParam("tax") String tax) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(user.getClassAreaId());
@@ -569,6 +584,7 @@ public class HomeController {
             model.addAttribute("workCreateForm", work);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
+            model.addAttribute("tax", tax);
             redirectAttributes.addAttribute("user", userId);
             return "createForm";
         } catch (Exception e) {
@@ -647,7 +663,7 @@ public class HomeController {
     
     // シフト修正（社員用）
     @GetMapping("/setForm")
-    String setFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month) {
+    String setFormGet(Model model, RedirectAttributes redirectAttributes, @RequestParam("manager") String managerId, @RequestParam("user") String userId, @RequestParam("edit") String editId, @RequestParam("year") String year, @RequestParam("month") String month, @RequestParam("tax") String tax) {
         try {
             User user = userService.getByUserId(UUID.fromString(userId));
             Manager manager = managerService.getByManagerId(user.getClassAreaId());
@@ -657,6 +673,7 @@ public class HomeController {
             model.addAttribute("workUpdateForm", work);
             model.addAttribute("year", year);
             model.addAttribute("month", month);
+            model.addAttribute("tax", tax);
             redirectAttributes.addAttribute("user", userId);
             return "setForm";
         } catch (Exception e) {
@@ -788,7 +805,7 @@ public class HomeController {
     
     // シフト登録（社員用）
     @PostMapping("/createForm")
-    String createFormPost(@ModelAttribute("workCreateForm") Work form, RedirectAttributes redirectAttributes) {
+    String createFormPost(@ModelAttribute("workCreateForm") Work form, RedirectAttributes redirectAttributes, @RequestParam("tax") String tax) {
         try {
             String year = DateSet.getYear(form.getDate());
             String month = DateSet.getMonth(form.getDate());
@@ -801,6 +818,7 @@ public class HomeController {
             redirectAttributes.addAttribute("manager", manager.getId());
             redirectAttributes.addAttribute("year", year);
             redirectAttributes.addAttribute("month", month);
+            redirectAttributes.addAttribute("tax", tax);
             try {
                 form = workService.calcTimeAndSalary(form);
                 workService.add(form);
@@ -846,7 +864,7 @@ public class HomeController {
     
     // シフト修正（社員用）
     @PostMapping("/setForm")
-    String setFormPost(@ModelAttribute("workUpdateForm") Work form, RedirectAttributes redirectAttributes) {
+    String setFormPost(@ModelAttribute("workUpdateForm") Work form, RedirectAttributes redirectAttributes, @RequestParam("tax") String tax) {
         try {
             String year = DateSet.getYear(form.getDate());
             String month = DateSet.getMonth(form.getDate());
@@ -859,6 +877,7 @@ public class HomeController {
             redirectAttributes.addAttribute("manager", manager);
             redirectAttributes.addAttribute("year", year);
             redirectAttributes.addAttribute("month", month);
+            redirectAttributes.addAttribute("tax", tax);
             try {
                 form = workService.calcTimeAndSalary(form);
                 workService.update(form);     
@@ -895,7 +914,7 @@ public class HomeController {
     
     // シフト削除（社員用）
     @PostMapping("/clearWork")
-    String clearWork(@Param("managerId") String managerId, @Param("userId") String userId, @Param("deleteId") String deleteId, RedirectAttributes redirectAttributes) {
+    String clearWork(@Param("managerId") String managerId, @Param("userId") String userId, @Param("deleteId") String deleteId, @Param("tax") String tax, RedirectAttributes redirectAttributes) {
         try {
             Work work = workService.findWorkById(UUID.fromString(deleteId));
             String year = DateSet.getYear(work.getDate());
@@ -905,6 +924,7 @@ public class HomeController {
             redirectAttributes.addAttribute("user", userId);
             redirectAttributes.addAttribute("year", year);
             redirectAttributes.addAttribute("month", month);
+            redirectAttributes.addAttribute("tax", tax);
             return "redirect:detailUser";
         } catch (Exception e) {
             System.out.println("Error happened in clearWork(post)");
