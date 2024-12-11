@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>勤怠管理システム</title>
+		<script th:src="@{/js/tax.js}" defer></script>
 	</head>
 	<body>
 		<div>
@@ -11,15 +12,15 @@
 		</div>
 		<br>
 		<div>
-			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${yearBefore}, month=${monthBefore})}">先月</a>
-			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${yearNext}, month=${monthNext})}">来月</a>
+			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${yearBefore}, month=${monthBefore}, tax=${tax})}">先月</a>
+			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${yearNext}, month=${monthNext}, tax=${tax})}">来月</a>
 		</div>
 		<div>
 			<a th:href = "@{/indexManager(manager=${manager.id})}">ホームへ戻る</a>
 		</div>
 		<br>
 		<div>
-			<a th:href = "@{/createForm(manager=${manager.id}, user=${user.id}, year=${year}, month=${month})}">シフト登録</a>
+			<a th:href = "@{/createForm(manager=${manager.id}, user=${user.id}, year=${year}, month=${month}, tax=${tax})}">シフト登録</a>
 		</div>
 		<br>
 		<div>
@@ -101,7 +102,7 @@
 				</tr>
 				<th:block th:if = "${!#lists.isEmpty(workList)}">
 				<tr th:each = "w : ${workList}">
-					<td><a th:href = "@{/setForm(manager=${manager.id}, user=${user.id}, edit=${w.id}, year=${year}, month=${month})}"><span th:text = "${w.date.substring(5,10).replace('-','月')+'日'}"></span></a></td>
+					<td><a th:href = "@{/setForm(manager=${manager.id}, user=${user.id}, edit=${w.id}, year=${year}, month=${month}, tax=${tax})}"><span th:text = "${w.date.substring(5,10).replace('-','月')+'日'}"></span></a></td>
 					<td th:text = "${w.dayOfWeek}"></td>
 					<td>
 						<th:block th:if = "${w.classM}"><span th:text = "'M'"></span></th:block>
@@ -136,6 +137,15 @@
 		</div>
 		<br>
 		<div>
+			所得税
+			<input id="tax-on" type="radio" name="tax" value="on"><label for="tax-on">引く</label>
+			<input id="tax-off" type="radio" name="tax" value="off"><label for="tax-off">引かない</label>
+			<div style="display: none;">
+				<a id="tax-button" th:href="@{/detailUser(manager=${manager.id}, user=${user.id}, year=${year}, month=${month}, tax=${tax})}"></a>
+			</div>
+		</div>
+		<br>
+		<div>
 			<table border="1" style="border-collapse: collapse">
 				<tr><th>コマ給</th><th>コマ数</th><th>①コマ給×コマ数</th><th>②日時手当</th><th>③事務給</th></tr>
 				<tr>
@@ -149,7 +159,7 @@
 				<tr>
 					<td colspan = "2">¥<span th:text = "${sumSalaryFormatted[19]}"></span></td>
 					<td>¥<span th:text = "${sumSalaryFormatted[10]}"></span></td>
-					<td>¥<span th:text = "'0'"></span></td>
+					<td>¥<span th:text = "${incomeTaxFormatted}"></span></td>
 					<td>¥<span th:text = "${sumSalaryFormatted[11]}"></span></td>
 				</tr>
 			</table>

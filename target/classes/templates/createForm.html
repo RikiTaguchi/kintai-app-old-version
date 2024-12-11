@@ -65,6 +65,7 @@
 				</table>
 				<div style = "display: none;">
 					<input id = "userId" type = "text" th:field = "*{userId}">
+					<input id="tax" type="text" name="tax" th:value="${tax}">
 				</div>
 				<div>
 					<input type = "submit" value = "登録">
@@ -72,7 +73,7 @@
 			</form>
 		</div>
 		<div>
-			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${year}, month=${month})}">戻る</a>
+			<a th:href = "@{/detailUser(manager=${manager.id}, user=${user.id}, year=${year}, month=${month}, tax=${tax})}">戻る</a>
 		</div>
 	</body>
 </html>
