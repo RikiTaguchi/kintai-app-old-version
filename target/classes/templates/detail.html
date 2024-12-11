@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>勤怠管理システム</title>
+		<script th:src="@{/js/tax.js}" defer></script>
 	</head>
 	<body>
 		<div>
@@ -20,8 +21,17 @@
 			<span th:text = "${month}"></span>月25日
 		</div>
 		<div>
-			<a th:href = "@{/detail(user=${user.id}, year=${yearBefore}, month=${monthBefore})}">先月</a>
-			<a th:href = "@{/detail(user=${user.id}, year=${yearNext}, month=${monthNext})}">次月</a>
+			<a th:href = "@{/detail(user=${user.id}, year=${yearBefore}, month=${monthBefore}, tax=${tax})}">先月</a>
+			<a th:href = "@{/detail(user=${user.id}, year=${yearNext}, month=${monthNext}, tax=${tax})}">次月</a>
+		</div>
+		<br>
+		<div>
+			所得税
+			<input id="tax-on" type="radio" name="tax" value="on"><label for="tax-on">引く</label>
+			<input id="tax-off" type="radio" name="tax" value="off"><label for="tax-off">引かない</label>
+			<div style="display: none;">
+				<a id="tax-button" th:href="@{/detail(user=${user.id}, year=${year}, month=${month}, tax=${tax})}"></a>
+			</div>
 		</div>
 		<br>
 		<div>
@@ -33,7 +43,7 @@
 				<tr><th>③事務給</th><td>¥<span th:text = "${sumSalaryFormatted[6]}"></span></td></tr>
 				<tr><th>④研修費・時間外</th><td>¥<span th:text = "${sumSalaryFormatted[18]}"></span></td></tr>
 				<tr><th>⑤その他</th><td>¥<span th:text = "${sumSalaryFormatted[10]}"></span></td></tr>
-				<tr><th>所得税</th><td>¥0</td></tr>
+				<tr><th>所得税</th><td>¥<span th:text = "${incomeTaxFormatted}"></span></td></tr>
 				<tr><th>交通費計</th><td>¥<span th:text = "${sumSalaryFormatted[11]}"></span></td></tr>
 			</table>
 			<br>
